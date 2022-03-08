@@ -1,0 +1,41 @@
+{
+  "name": "isomorphic-react",
+  "version": "1.0.0",
+  "description": "Basic React SSR setup with Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run server-side-react",
+    "client-side-react-dev": "npx webpack --watch --config webpack.config.dev.js --mode development",
+    "server-side-react": "nodemon src/server.js --exec babel-node --presets @babel/env,@babel/react",
+    "sass-watch": "sass --style=compressed --watch ./scss/index.scss ./public/css/styles.min.css",
+    "build": "npx webpack --config webpack.config.prod.js --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reyarqueza/isomorphic-react.git"
+  },
+  "author": "Rey Arqueza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reyarqueza/isomorphic-react/issues"
+  },
+  "homepage": "https://github.com/reyarqueza/isomorphic-react#readme",
+  "dependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.1",
+    "sass": "^1.49.3",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
