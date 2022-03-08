@@ -11,6 +11,8 @@ import props from '../public/json/api.json';
 
 import wrapper from './wrapper';
 
+import {getCoinList} from './data';
+
 const app = express();
 const port = 3000;
 const store = createStore(reducer);
@@ -45,6 +47,14 @@ app.get('/', home);
 
 // API
 app.get('/api', api);
+
+app.get('/get-coin-list', (request, response) => {
+  const {minQuote, maxQuote} = request.query;
+
+  getCoinList(minQuote, maxQuote).then(data => {
+    response.send(data);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Open your browser at http://localhost:${port}`);
