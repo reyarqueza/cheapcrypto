@@ -1,4 +1,5 @@
 import express from 'express';
+import apicache from 'apicache';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
@@ -14,6 +15,7 @@ import wrapper from './wrapper';
 import {getCoinList} from './data';
 
 const app = express();
+const cache = apicache.middleware;
 const port = 3000;
 const store = createStore(reducer);
 // Grab the initial state from our Redux store
@@ -48,11 +50,11 @@ app.get('/', home);
 // API
 app.get('/api', api);
 
-app.get('/get-coin-list', (request, response) => {
-  const {minQuote, maxQuote} = request.query;
+app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
+  const {minQuote, maxQuote} = req.query;
 
   getCoinList(minQuote, maxQuote).then(data => {
-    response.send(data);
+    res.send(data);
   });
 });
 
