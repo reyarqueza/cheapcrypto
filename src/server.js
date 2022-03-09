@@ -12,7 +12,7 @@ import props from '../public/json/api.json';
 
 import wrapper from './wrapper';
 
-import {getCoinList} from './data';
+import {getCoinInfo, getCoinList} from './data';
 
 const app = express();
 const cache = apicache.middleware;
@@ -55,6 +55,14 @@ app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
 
   getCoinList(minQuote, maxQuote).then(data => {
     res.send(data);
+  });
+});
+// bug.. if set to 1440 minutes, cache gets corrupt. how to clear cache manually?
+app.get('/get-coin-meta', cache('1 day'), (req, res) => {
+  const {contractAddress} = req.query;
+
+  getCoinInfo(contractAddress).then(coinInfo => {
+    res.send(coinInfo);
   });
 });
 

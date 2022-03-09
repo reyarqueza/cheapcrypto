@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch';
+import {config} from './config';
 
 export function getCoinList(minQuote, maxQuote) {
   const url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
@@ -11,12 +12,33 @@ export function getCoinList(minQuote, maxQuote) {
   });
   const urlWithParams = `${url}?${params.toString()}`;
 
+  console.log('config'.config);
+
   return new Promise((resolve, reject) => {
     fetch(urlWithParams, {
-      headers: {
-        Accept: 'application/json',
-        'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
-      },
+      headers: config.headers,
+    })
+      .then(response => response.json())
+      .then(json => {
+        resolve(json.data);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+}
+
+export function getCoinInfo(contractAddress) {
+  const url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/info';
+  const params = new URLSearchParams({
+    address: contractAddress,
+  });
+  const urlString = `${url}?${params.toString()}`;
+  console.log(urlString);
+
+  return new Promise((resolve, reject) => {
+    fetch(urlString, {
+      headers: config.headers,
     })
       .then(response => response.json())
       .then(json => {
