@@ -1,5 +1,6 @@
 import express from 'express';
 import apicache from 'apicache';
+import fetch from 'cross-fetch';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
@@ -7,7 +8,7 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
 
-import App from './jsx/App.jsx';
+import AppContainer from './jsx/AppContainer.jsx';
 import props from '../public/json/api.json';
 
 import wrapper from './wrapper';
@@ -17,22 +18,39 @@ import {getCoinInfo, getCoinList} from './data';
 const app = express();
 const cache = apicache.middleware;
 const port = 3000;
-const store = createStore(reducer);
-// Grab the initial state from our Redux store
-const preloadedState = store.getState();
+// const store = createStore(reducer);
+// // Grab the initial state from our Redux store
+// const preloadedState = store.getState();
 
 // pages
 function home(req, res) {
-  res.send(
-    wrapper(
-      ReactDOMServer.renderToString(
-        <Provider store={store}>
-          <App />
-        </Provider>
-      ),
-      preloadedState
-    )
-  );
+  const params = new URLSearchParams({
+    minQuote: '1e-23',
+    maxQuote: '1e-13',
+  });
+  const urlString = `http://localhost:3000/get-coin-list?${params.toString()}`;
+
+  fetch(urlString)
+    .then(response => response.json())
+    .then(json => {
+      const preloadedState = json;
+      const store = createStore(reducer, preloadedState);
+      const finalState = store.getState();
+
+      res.send(
+        wrapper(
+          ReactDOMServer.renderToString(
+            <Provider store={store}>
+              <AppContainer />
+            </Provider>
+          ),
+          finalState
+        )
+      );
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 function api(req, res) {
@@ -45,7 +63,7 @@ function api(req, res) {
 app.use(express.static('public'));
 
 // SSR
-app.get('/', home);
+app.get('/', cache('5 minutes'), home);
 
 // API
 app.get('/api', api);
