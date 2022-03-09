@@ -8,7 +8,8 @@
     "client-side-react-dev": "npx webpack --watch --config webpack.config.dev.js --mode development",
     "server-side-react": "nodemon src/server.js --exec babel-node --presets @babel/env,@babel/react",
     "sass-watch": "sass --style=compressed --watch ./scss/index.scss ./public/css/styles.min.css",
-    "build": "npx webpack --config webpack.config.prod.js --mode production"
+    "build": "npx webpack --config webpack.config.prod.js --mode production",
+    "build-watch": "npx webpack --watch --config webpack.config.prod.js --mode production"
   },
   "repository": {
     "type": "git",
