@@ -51,9 +51,9 @@ app.get('/', home);
 app.get('/api', api);
 
 app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
-  const {minQuote, maxQuote} = req.query;
+  const {minQuote, maxQuote, limit, start} = req.query;
 
-  getCoinList(minQuote, maxQuote).then(data => {
+  getCoinList(minQuote, maxQuote, limit, start).then(data => {
     res.send(data);
   });
 });
