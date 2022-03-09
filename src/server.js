@@ -18,6 +18,8 @@ import {getCoinInfo, getCoinList} from './data';
 const app = express();
 const cache = apicache.middleware;
 const port = 3000;
+
+apicache.clear();
 // const store = createStore(reducer);
 // // Grab the initial state from our Redux store
 // const preloadedState = store.getState();
