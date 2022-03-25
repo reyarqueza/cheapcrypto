@@ -1,4 +1,6 @@
 import express from 'express';
+import {graphqlHTTP} from 'express-graphql';
+import {buildSchema} from 'graphql';
 import apicache from 'apicache';
 import fetch from 'cross-fetch';
 import React from 'react';
@@ -18,6 +20,50 @@ import {getCoinInfo, getCoinList} from './data';
 const app = express();
 const cache = apicache.middleware;
 const port = 3000;
+
+// in the GraphiQL app, test with:
+/*
+query CoinList($minQuote: String!, $maxQuote: String!) {
+  coinList(minQuote: $minQuote, maxQuote: $maxQuote)
+}
+
+// query variables specified in JSON
+{
+  "minQuote": "1e-23",
+  "maxQuote": "1e-17"
+}
+*/
+
+const schema = buildSchema(`
+  type Query {
+    coinList(minQuote: String!, maxQuote: String!): [String]
+  }
+`);
+
+async function fetchCoinList({minQuote, maxQuote}) {
+  const params = new URLSearchParams({minQuote, maxQuote});
+  const url = `http://localhost:3000/get-coin-list?${params.toString()}`;
+
+  try {
+    const response = await fetch(url);
+    const coinList = await response.json();
+
+    return coinList.map(coin => coin.name);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    rootValue: {
+      coinList: ({minQuote, maxQuote}) => fetchCoinList({minQuote, maxQuote}),
+    },
+    graphiql: true,
+  })
+);
 
 apicache.clear();
 // const store = createStore(reducer);
