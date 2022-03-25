@@ -23,8 +23,8 @@ const port = 3000;
 
 // in the GraphiQL app, test with:
 /*
-query CoinList($minQuote: String!, $maxQuote: String!) {
-  coinList(minQuote: $minQuote, maxQuote: $maxQuote) {
+query CoinList($minQuote: String!, $maxQuote: String!, $start: Int!) {
+  coinList(minQuote: $minQuote, maxQuote: $maxQuote, $start) {
     id,
     name, 
     quote {
@@ -46,7 +46,7 @@ notice a subfield is required. you cannot just call coinList without a single su
 
 const schema = buildSchema(`
   type Query {
-    coinList(minQuote: String!, maxQuote: String!): [Coin]
+    coinList(minQuote: String!, maxQuote: String!, start: Int!): [Coin]
   }
 
   type Coin {
@@ -97,8 +97,8 @@ const schema = buildSchema(`
   }
 `);
 
-async function fetchCoinList({minQuote, maxQuote}) {
-  const params = new URLSearchParams({minQuote, maxQuote});
+async function fetchCoinList({minQuote, maxQuote, start}) {
+  const params = new URLSearchParams({minQuote, maxQuote, start});
   const url = `http://localhost:3000/get-coin-list?${params.toString()}`;
 
   try {
@@ -116,7 +116,7 @@ app.use(
   graphqlHTTP({
     schema,
     rootValue: {
-      coinList: ({minQuote, maxQuote}) => fetchCoinList({minQuote, maxQuote}),
+      coinList: ({minQuote, maxQuote, start}) => fetchCoinList({minQuote, maxQuote, start}),
     },
     graphiql: true,
   })
