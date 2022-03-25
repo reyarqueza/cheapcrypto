@@ -1,0 +1,50 @@
+type Query {
+  coinList(minQuote: String!, maxQuote: String!, start: Int!): [Coin]
+}
+
+type Coin {
+  id: Int
+  name: String
+  symbol: String
+  slug: String
+  num_market_pairs: Int
+  date_added: String
+  max_supply: Int
+  circulating_supply: Float
+  total_supply: Float
+  tags: [String]
+  platform: Platform
+  cmc_rank: Int
+  self_reported_circulating_supply: Float
+  self_reported_market_cap: Float
+  last_updated: String
+  quote: Quote
+}
+
+type Platform {
+  id: Int
+  name: String
+  symbol: String
+  slug: String
+  token_address: String
+}
+
+type Quote {
+  USD: Usd
+}
+
+type Usd {
+  price: String
+  volume_24h: Float
+  volume_change_24h: Float
+  percent_change_1h: Float
+  percent_change_24h: Float
+  percent_change_7d: Float
+  percent_change_30d: Float
+  percent_change_60d: Float
+  percent_change_90d: Float
+  market_cap: Float
+  market_cap_dominance: Float
+  fully_diluted_market_cap: Float
+  last_updated: String
+}

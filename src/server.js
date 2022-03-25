@@ -1,6 +1,14 @@
 import express from 'express';
 import {graphqlHTTP} from 'express-graphql';
+
+// official graphql
 import {buildSchema} from 'graphql';
+
+// 3rd party graphql
+import {loadFile} from 'graphql-import-files';
+// import {loadSchema} from '@graphql-tools/load';
+// import {GraphQLFileLoader} from '@graphql-tools/graphql-file-loader';
+
 import apicache from 'apicache';
 import fetch from 'cross-fetch';
 import React from 'react';
@@ -44,59 +52,6 @@ notice a subfield is required. you cannot just call coinList without a single su
 }
 */
 
-const schema = buildSchema(`
-  type Query {
-    coinList(minQuote: String!, maxQuote: String!, start: Int!): [Coin]
-  }
-
-  type Coin {
-    id: Int
-    name: String
-    symbol: String
-    slug: String
-    num_market_pairs: Int
-    date_added: String
-    max_supply: Int
-    circulating_supply: Float
-    total_supply: Float
-    tags: [String]
-    platform: Platform
-    cmc_rank: Int
-    self_reported_circulating_supply: Float
-    self_reported_market_cap: Float
-    last_updated: String
-    quote: Quote
-  }
-
-  type Platform {
-    id: Int
-    name: String
-    symbol: String
-    slug: String
-    token_address: String
-  }
-
-  type Quote {
-    USD: Usd
-  }
-
-  type Usd {
-    price: String
-    volume_24h: Float
-    volume_change_24h: Float
-    percent_change_1h: Float
-    percent_change_24h: Float
-    percent_change_7d: Float
-    percent_change_30d: Float
-    percent_change_60d: Float
-    percent_change_90d: Float
-    market_cap: Float
-    market_cap_dominance: Float
-    fully_diluted_market_cap: Float
-    last_updated: String
-  }
-`);
-
 async function fetchCoinList({minQuote, maxQuote, start}) {
   const params = new URLSearchParams({minQuote, maxQuote, start});
   const url = `http://localhost:3000/get-coin-list?${params.toString()}`;
@@ -114,7 +69,7 @@ async function fetchCoinList({minQuote, maxQuote, start}) {
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema,
+    schema: buildSchema(loadFile('./src/schemas/coinList.graphql')),
     rootValue: {
       coinList: ({minQuote, maxQuote, start}) => fetchCoinList({minQuote, maxQuote, start}),
     },
