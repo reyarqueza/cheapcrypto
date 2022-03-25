@@ -24,8 +24,18 @@ const port = 3000;
 // in the GraphiQL app, test with:
 /*
 query CoinList($minQuote: String!, $maxQuote: String!) {
-  coinList(minQuote: $minQuote, maxQuote: $maxQuote)
+  coinList(minQuote: $minQuote, maxQuote: $maxQuote) {
+    id,
+    name, 
+    quote {
+      USD {
+        price
+      }
+    }
+  }
 }
+
+notice a subfield is required. you cannot just call coinList without a single subfield.
 
 // query variables specified in JSON
 {
@@ -36,7 +46,54 @@ query CoinList($minQuote: String!, $maxQuote: String!) {
 
 const schema = buildSchema(`
   type Query {
-    coinList(minQuote: String!, maxQuote: String!): [String]
+    coinList(minQuote: String!, maxQuote: String!): [Coin]
+  }
+
+  type Coin {
+    id: Int
+    name: String
+    symbol: String
+    slug: String
+    num_market_pairs: Int
+    date_added: String
+    max_supply: Int
+    circulating_supply: Float
+    total_supply: Float
+    tags: [String]
+    platform: Platform
+    cmc_rank: Int
+    self_reported_circulating_supply: Float
+    self_reported_market_cap: Float
+    last_updated: String
+    quote: Quote
+  }
+
+  type Platform {
+    id: Int
+    name: String
+    symbol: String
+    slug: String
+    token_address: String
+  }
+
+  type Quote {
+    USD: Usd
+  }
+
+  type Usd {
+    price: String
+    volume_24h: Float
+    volume_change_24h: Float
+    percent_change_1h: Float
+    percent_change_24h: Float
+    percent_change_7d: Float
+    percent_change_30d: Float
+    percent_change_60d: Float
+    percent_change_90d: Float
+    market_cap: Float
+    market_cap_dominance: Float
+    fully_diluted_market_cap: Float
+    last_updated: String
   }
 `);
 
@@ -48,7 +105,7 @@ async function fetchCoinList({minQuote, maxQuote}) {
     const response = await fetch(url);
     const coinList = await response.json();
 
-    return coinList.map(coin => coin.name);
+    return coinList;
   } catch (err) {
     console.log(err);
   }
