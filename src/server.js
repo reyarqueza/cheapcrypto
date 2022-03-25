@@ -24,7 +24,7 @@ const port = 3000;
 // in the GraphiQL app, test with:
 /*
 query CoinList($minQuote: String!, $maxQuote: String!, $start: Int!) {
-  coinList(minQuote: $minQuote, maxQuote: $maxQuote, $start) {
+  coinList(minQuote: $minQuote, maxQuote: $maxQuote, start: $start) {
     id,
     name, 
     quote {
