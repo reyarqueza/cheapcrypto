@@ -123,9 +123,6 @@ app.use(
 );
 
 apicache.clear();
-// const store = createStore(reducer);
-// // Grab the initial state from our Redux store
-// const preloadedState = store.getState();
 
 // pages
 function home(req, res) {
