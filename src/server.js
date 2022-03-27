@@ -14,10 +14,8 @@ import {Provider} from 'react-redux';
 import reducer from './reducers';
 
 import AppContainer from './jsx/AppContainer.jsx';
-import props from '../public/json/api.json';
 
 import wrapper from './wrapper';
-
 import {getCoinInfo, getCoinList} from './data';
 
 const app = express();
@@ -68,20 +66,11 @@ function home(req, res) {
     });
 }
 
-function api(req, res) {
-  setTimeout(() => {
-    res.send(props);
-  }, 0); // simulate lag by increasing ms
-}
-
 // static files
 app.use(express.static('public'));
 
 // SSR
 app.get('/', cache('5 minutes'), home);
-
-// API
-app.get('/api', api);
 
 app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
   const {minQuote, maxQuote, limit, start} = req.query;
