@@ -1,5 +1,7 @@
 # Notes when using GraphiQL
 
+Use the GraphiQL app on http://localhost:3000/graphql
+
 ## In the GraphiQL app, test with:
 
 ```
