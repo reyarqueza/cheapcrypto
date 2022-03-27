@@ -1,14 +1,7 @@
 import express from 'express';
 import {graphqlHTTP} from 'express-graphql';
-
-// official graphql
 import {buildSchema} from 'graphql';
-
-// 3rd party graphql
 import {loadFile} from 'graphql-import-files';
-// import {loadSchema} from '@graphql-tools/load';
-// import {GraphQLFileLoader} from '@graphql-tools/graphql-file-loader';
-
 import {fetchCoinList} from './graphql/coinListResolver';
 
 import apicache from 'apicache';
