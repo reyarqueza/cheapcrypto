@@ -9,6 +9,8 @@ import {loadFile} from 'graphql-import-files';
 // import {loadSchema} from '@graphql-tools/load';
 // import {GraphQLFileLoader} from '@graphql-tools/graphql-file-loader';
 
+import {fetchCoinList} from './graphql/coinListResolver';
+
 import apicache from 'apicache';
 import fetch from 'cross-fetch';
 import React from 'react';
@@ -29,47 +31,10 @@ const app = express();
 const cache = apicache.middleware;
 const port = 3000;
 
-// in the GraphiQL app, test with:
-/*
-query CoinList($minQuote: String!, $maxQuote: String!, $start: Int!) {
-  coinList(minQuote: $minQuote, maxQuote: $maxQuote, start: $start) {
-    id,
-    name, 
-    quote {
-      USD {
-        price
-      }
-    }
-  }
-}
-
-notice a subfield is required. you cannot just call coinList without a single subfield.
-
-// query variables specified in JSON
-{
-  "minQuote": "1e-23",
-  "maxQuote": "1e-17"
-}
-*/
-
-async function fetchCoinList({minQuote, maxQuote, start}) {
-  const params = new URLSearchParams({minQuote, maxQuote, start});
-  const url = `http://localhost:3000/get-coin-list?${params.toString()}`;
-
-  try {
-    const response = await fetch(url);
-    const coinList = await response.json();
-
-    return coinList;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: buildSchema(loadFile('./src/schemas/coinList.graphql')),
+    schema: buildSchema(loadFile('./src/graphql/coinList.graphqls')),
     rootValue: {
       coinList: ({minQuote, maxQuote, start}) => fetchCoinList({minQuote, maxQuote, start}),
     },
