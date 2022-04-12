@@ -33,7 +33,7 @@ $ npm start
 
 ```bash
 reyarqueza@rey-mac : ~/cheapcrypto
-$ npm run client-side-react-dev
+$ npm run dev
 ```
 
 ### Run the Sass compile watcher (Dart with @use support)
