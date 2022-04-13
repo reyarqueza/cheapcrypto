@@ -13,31 +13,31 @@ function formatTime(dateStr) {
 function bigWordNumber(num, precision) {
   if (num >= 1e6 && num < 1e9) {
     // million
-    return `${+(num / 1e6).toPrecision(precision)}\xa0Million`;
+    return `${+(num / 1e6).toPrecision(precision)} Million`;
   } else if (num >= 1e9 && num < 1e12) {
     // billion
-    return `${+(num / 1e9).toPrecision(precision)}\xa0Billion`;
+    return `${+(num / 1e9).toPrecision(precision)} Billion`;
   } else if (num >= 1e12 && num < 1e15) {
     // trillion
-    return `${+(num / 1e12).toPrecision(precision)}\xa0Trillion`;
+    return `${+(num / 1e12).toPrecision(precision)} Trillion`;
   } else if (num >= 1e15 && num < 1e18) {
     // quadrillion
-    return `${+(num / 1e15).toPrecision(precision)}\xa0Quadrillion`;
+    return `${+(num / 1e15).toPrecision(precision)} Quadrillion`;
   } else if (num >= 1e18 && num < 1e21) {
     // quntillion
-    return `${+(num / 1e18).toPrecision(precision)}\xa0Quntillion`;
+    return `${+(num / 1e18).toPrecision(precision)} Quntillion`;
   } else if (num >= 1e21 && num < 1e24) {
     // sextillion
-    return `${+(num / 1e21).toPrecision(precision)}\xa0Sextillion`;
+    return `${+(num / 1e21).toPrecision(precision)} Sextillion`;
   } else if (num >= 1e24 && num < 1e27) {
     // septillion
-    return `${+(num / 1e24).toPrecision(precision)}\xa0Septillion`;
+    return `${+(num / 1e24).toPrecision(precision)} Septillion`;
   } else if (num >= 1e27 && num < 1e30) {
     // octillion
-    return `${+(num / 1e27).toPrecision(precision)}\xa0Octillion`;
+    return `${+(num / 1e27).toPrecision(precision)} Octillion`;
   } else if (num >= 1e30 && num < 1e33) {
     // nonillion
-    return `${+(num / 1e30).toPrecision(precision)}\xa0Nonillion`;
+    return `${+(num / 1e30).toPrecision(precision)} Nonillion`;
   } else {
     return num;
   }
