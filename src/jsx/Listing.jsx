@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
@@ -89,7 +90,9 @@ export default function ({listings}) {
       {listings.map(prop => {
         return (
           <tr key={prop.id}>
-            <td>{prop.name}</td>
+            <td>
+              <Link to="/coin">{prop.name}</Link>
+            </td>
             <td>{prop.symbol}</td>
             <td>{prop.platform.symbol}</td>
             <td>{prop.num_market_pairs}</td>

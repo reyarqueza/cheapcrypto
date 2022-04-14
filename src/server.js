@@ -8,12 +8,16 @@ import apicache from 'apicache';
 import fetch from 'cross-fetch';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import {StaticRouter} from 'react-router-dom/server';
 
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
 
-import AppContainer from './jsx/AppContainer.jsx';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Layout from './jsx/Layout.jsx';
+import Coins from './jsx/Coins.jsx';
+import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
 import {getCoinInfo, getCoinList} from './data';
@@ -54,7 +58,15 @@ function home(req, res) {
         wrapper(
           ReactDOMServer.renderToString(
             <Provider store={store}>
-              <AppContainer />
+              <StaticRouter>
+                <Routes>
+                  <Route path="/" element={<Layout />}>
+                    <Route path="coins" element={<Coins />}>
+                      <Route path=":coinId" element={<Coin />} />
+                    </Route>
+                  </Route>
+                </Routes>
+              </StaticRouter>
             </Provider>
           ),
           finalState
