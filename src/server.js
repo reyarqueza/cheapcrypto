@@ -39,8 +39,8 @@ app.use(
 
 apicache.clear();
 
-// pages
-function home(req, res) {
+// React SSR
+function init(req, res) {
   const params = new URLSearchParams({
     minQuote: '1e-23',
     maxQuote: '1e-13',
@@ -80,7 +80,7 @@ function home(req, res) {
 app.use(express.static('public'));
 
 // SSR
-app.get('/', cache('5 minutes'), home);
+app.get(['/', '/token-address/:coinId'], cache('5 minutes'), init);
 
 app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
   const {minQuote, maxQuote, limit, start} = req.query;
