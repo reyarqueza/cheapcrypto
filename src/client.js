@@ -23,7 +23,8 @@ ReactDOM.hydrate(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="coins" element={<Coins />}>
+          <Route index element={<Coins />} />
+          <Route path="token-address" element={<Coin />}>
             <Route path=":coinId" element={<Coin />} />
           </Route>
         </Route>

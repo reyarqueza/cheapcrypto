@@ -60,10 +60,8 @@ function home(req, res) {
             <Provider store={store}>
               <StaticRouter>
                 <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route path="coins" element={<Coins />}>
-                      <Route path=":coinId" element={<Coin />} />
-                    </Route>
+                  <Route path="/" element={<Coins />}>
+                    <Route path=":coinId" element={<Coin />} />
                   </Route>
                 </Routes>
               </StaticRouter>
