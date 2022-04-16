@@ -91,10 +91,10 @@ function init(req, res) {
 app.use(express.static('public'));
 
 // SSR
-app.get(['/', '/token-address/:coinId'], init);
+app.get(['/', '/token-address/:coinId'], cache('5 minutes'), init);
 
 // rest api
-app.get('/get-coin-list', (req, res) => {
+app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
   const {minQuote, maxQuote, limit, start} = req.query;
 
   getCoinList(minQuote, maxQuote, limit, start).then(data => {
@@ -102,7 +102,7 @@ app.get('/get-coin-list', (req, res) => {
   });
 });
 
-app.get('/get-coin-meta', (req, res) => {
+app.get('/get-coin-meta', cache('5 minutes'), (req, res) => {
   const {contractAddress} = req.query;
 
   getCoinInfo(contractAddress).then(coinInfo => {
