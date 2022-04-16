@@ -1,0 +1,54 @@
+type Query {
+  coinMeta(contractAddress: String!): CoinInfo
+}
+
+type CoinInfo {
+  id: Int
+  name: String
+  symbol: String
+  category: String
+  description: String
+  slug: String
+  logo: String
+  subreddit: String
+  notice: String
+  tags: String
+  tagnames: String
+  taggroups: String
+  date_added: String
+  twitter_username: String
+  is_hidden: Int
+  date_launched: String
+  self_reported_circulating_supply: String
+  self_reported_tags: String
+  self_reported_market_cap: String
+  contract_address: [ContractAddress]
+  platform: Platform
+  urls: Urls
+}
+
+type ContractAddress {
+  contract_address: String
+  platform: Platform
+}
+
+type Platform {
+  id: Int
+  name: String
+  symbol: String
+  slug: String
+  token_address: String
+}
+
+type Urls {
+  announcement: [String]
+  source_code: [String]
+  technical_doc: [String]
+  reddit: [String]
+  explorer: [String]
+  facebook: [String]
+  chat: [String]
+  message_board: [String]
+  twitter: [String]
+  website: [String]
+}

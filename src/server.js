@@ -1,8 +1,9 @@
 import express from 'express';
 import {graphqlHTTP} from 'express-graphql';
 import {buildSchema} from 'graphql';
-import {loadFile} from 'graphql-import-files';
+
 import {fetchCoinList} from './graphql/coinListResolver';
+import {fetchCoinMeta} from './graphql/coinMetaResolver';
 
 import apicache from 'apicache';
 import fetch from 'cross-fetch';
@@ -13,6 +14,11 @@ import {StaticRouter} from 'react-router-dom/server';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
+
+import {join} from 'path';
+import {loadFilesSync} from '@graphql-tools/load-files';
+import {mergeTypeDefs} from '@graphql-tools/merge';
+import {print} from 'graphql';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Layout from './jsx/Layout.jsx';
@@ -26,12 +32,17 @@ const app = express();
 const cache = apicache.middleware;
 const port = 3000;
 
+const typesArray = loadFilesSync(join(__dirname, './graphql'), {extensions: ['graphqls']});
+const mergedSchemas = mergeTypeDefs(typesArray);
+const mergedSchemaString = print(mergedSchemas);
+
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: buildSchema(loadFile('./src/graphql/coinList.graphqls')),
+    schema: buildSchema(mergedSchemaString),
     rootValue: {
       coinList: ({minQuote, maxQuote, start}) => fetchCoinList({minQuote, maxQuote, start}),
+      coinMeta: ({contractAddress}) => fetchCoinMeta({contractAddress}),
     },
     graphiql: true,
   })
@@ -80,17 +91,18 @@ function init(req, res) {
 app.use(express.static('public'));
 
 // SSR
-app.get(['/', '/token-address/:coinId'], cache('5 minutes'), init);
+app.get(['/', '/token-address/:coinId'], init);
 
-app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
+// rest api
+app.get('/get-coin-list', (req, res) => {
   const {minQuote, maxQuote, limit, start} = req.query;
 
   getCoinList(minQuote, maxQuote, limit, start).then(data => {
     res.send(data);
   });
 });
-// bug.. if set to 1440 minutes, cache gets corrupt. how to clear cache manually?
-app.get('/get-coin-meta', cache('1 day'), (req, res) => {
+
+app.get('/get-coin-meta', (req, res) => {
   const {contractAddress} = req.query;
 
   getCoinInfo(contractAddress).then(coinInfo => {
@@ -98,6 +110,7 @@ app.get('/get-coin-meta', cache('1 day'), (req, res) => {
   });
 });
 
+// start express
 app.listen(port, () => {
   console.log(`Open your browser at http://localhost:${port}`);
 });

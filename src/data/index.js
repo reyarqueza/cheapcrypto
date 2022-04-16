@@ -48,7 +48,9 @@ export function getCoinInfo(contractAddress) {
     })
       .then(response => response.json())
       .then(json => {
-        resolve(json.data);
+        // api wraps json blob with key of coin, so remove that wrapper
+        // with Object.values
+        resolve(json && json.data && Object.values(json.data)[0]);
       })
       .catch(error => {
         reject(error);

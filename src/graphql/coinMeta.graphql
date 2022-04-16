@@ -1,0 +1,33 @@
+query CoinMeta($contractAddress: String!) {
+  coinMeta(contractAddress: $contractAddress) {
+    id
+    name
+    symbol
+    logo
+    description
+    subreddit
+    urls {
+      website
+      twitter
+      message_board
+      chat
+      facebook
+      explorer
+      reddit
+      technical_doc
+      source_code
+      announcement
+    }
+    platform {
+      id
+      name
+      symbol
+      token_address
+    }
+    date_added
+    date_launched
+    is_hidden
+    self_reported_circulating_supply
+    self_reported_market_cap
+  }
+}
