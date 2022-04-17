@@ -73,6 +73,14 @@ function init(req, res) {
                 <Routes>
                   <Route path="/" element={<Coins />}>
                     <Route path=":coinId" element={<Coin />} />
+                    <Route
+                      path="*"
+                      element={
+                        <div style={{padding: '1rem'}}>
+                          <p>There's nothing here!</p>
+                        </div>
+                      }
+                    />
                   </Route>
                 </Routes>
               </StaticRouter>
