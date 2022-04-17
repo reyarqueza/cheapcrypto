@@ -15,7 +15,7 @@ export default function Coin() {
   //   loaders: [new GraphQLFileLoader()],
   // });
   // console.log('graphql coinMetaGraphQL---', coinMetaGraphQL);
-  const {status, isLoading, error, data} = useQuery('coinMeta', () =>
+  const {status, isLoading, error, data} = useQuery(['coinMeta', params.coinId], () =>
     fetch('http://bahamut:3000/graphql', {
       method: 'POST',
       headers: {
