@@ -16,6 +16,11 @@ const config = {
           presets: ['@babel/env', '@babel/react'],
         },
       },
+      {
+        test: /.graphql?$/,
+        exclude: /node_modules/,
+        loader: '@graphql-tools/webpack-loader',
+      },
     ],
   },
 };

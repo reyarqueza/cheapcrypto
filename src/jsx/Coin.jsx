@@ -2,70 +2,34 @@ import React from 'react';
 import fetch from 'cross-fetch';
 import {useParams} from 'react-router-dom';
 import {useQuery} from 'react-query';
+import {print} from 'graphql';
 
-// const {loadDocuments} = require('@graphql-tools/load');
-// const {GraphQLFileLoader} = require('@graphql-tools/graphql-file-loader');
+let coinMetaGraphQL;
 
-// import coinMetaGraphQL from '../graphql/coinMeta.graphql';
-// console.log('coinMetaGraphQL', coinMetaGraphQL);
 export default function Coin() {
   const params = useParams();
-  //const query = fs.readFileSync('./src/graphql/coinMeta.graphql').toString();
-  // const coinMetaGraphQL = loadDocuments('./src/graphql/coinMeta.graphql', {
-  //   loaders: [new GraphQLFileLoader()],
-  // });
-  // console.log('graphql coinMetaGraphQL---', coinMetaGraphQL);
-  const {status, isLoading, error, data} = useQuery(['coinMeta', params.coinId], () =>
-    fetch('http://bahamut:3000/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        query: `
-          query CoinMeta($contractAddress: String!) {
-            coinMeta(contractAddress: $contractAddress) {
-              id
-              name
-              symbol
-              logo
-              description
-              subreddit
-              urls {
-                website
-                twitter
-                message_board
-                chat
-                facebook
-                explorer
-                reddit
-                technical_doc
-                source_code
-                announcement
-              }
-              platform {
-                id
-                name
-                symbol
-                token_address
-              }
-              date_added
-              date_launched
-              is_hidden
-              self_reported_circulating_supply
-              self_reported_market_cap
-            }
-          }
-        `,
-        variables: {contractAddress: params.coinId},
-      }),
-    })
-      .then(r => r.json())
-      .then(data => data && data.data.coinMeta)
-  );
-  console.log('-------data---', data);
-  console.log('status', status);
+  let status, isLoading, error, data;
+
+  // avoid SSR, sorry no isomorphic here.
+  if (typeof process !== 'object') {
+    coinMetaGraphQL = require('../graphql/coinMeta.graphql');
+
+    ({status, isLoading, error, data} = useQuery(['coinMeta', params.coinId], () =>
+      fetch('http://bahamut:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          query: print(coinMetaGraphQL),
+          variables: {contractAddress: params.coinId},
+        }),
+      })
+        .then(r => r.json())
+        .then(data => data && data.data.coinMeta)
+    ));
+  }
 
   if (isLoading) {
     return 'Loading...';
@@ -74,8 +38,6 @@ export default function Coin() {
   if (error) {
     return 'An error has occurred: ' + error.message;
   }
-
-  //return <div>test data {data && data.data.coinMeta && data.data.coinMeta.name}</div>;
 
   const {
     id,

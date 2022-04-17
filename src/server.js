@@ -71,16 +71,11 @@ function init(req, res) {
             <Provider store={store}>
               <StaticRouter>
                 <Routes>
-                  <Route path="/" element={<Coins />}>
-                    <Route path=":coinId" element={<Coin />} />
-                    <Route
-                      path="*"
-                      element={
-                        <div style={{padding: '1rem'}}>
-                          <p>There's nothing here!</p>
-                        </div>
-                      }
-                    />
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Coins />} />
+                    <Route path="token-address" element={<Coin />}>
+                      <Route path=":coinId" element={<Coin />} />
+                    </Route>
                   </Route>
                 </Routes>
               </StaticRouter>
