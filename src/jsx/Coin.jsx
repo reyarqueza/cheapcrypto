@@ -1,10 +1,8 @@
 import React from 'react';
-import fetch from 'cross-fetch';
 import {useParams} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {print} from 'graphql';
-
-let coinMetaGraphQL;
+import {request, gql} from 'graphql-request';
 
 export default function Coin() {
   const params = useParams();
@@ -12,22 +10,15 @@ export default function Coin() {
 
   // avoid SSR, sorry no isomorphic here.
   if (typeof process !== 'object') {
-    coinMetaGraphQL = require('../graphql/coinMeta.graphql');
+    const coinId = params.coinId;
+    const endpoint = 'http://bahamut:3000/graphql';
+    const query = gql`
+      ${print(require('../graphql/coinMeta.graphql'))}
+    `;
+    const variables = {contractAddress: coinId};
 
-    ({status, isLoading, error, data} = useQuery(['coinMeta', params.coinId], () =>
-      fetch('http://bahamut:3000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          query: print(coinMetaGraphQL),
-          variables: {contractAddress: params.coinId},
-        }),
-      })
-        .then(r => r.json())
-        .then(data => data && data.data.coinMeta)
+    ({status, isLoading, error, data} = useQuery(['coinMeta', coinId], () =>
+      request(endpoint, query, variables).then(data => data && data.coinMeta)
     ));
   }
 
