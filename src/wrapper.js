@@ -17,6 +17,7 @@ export default function (content, preloadedState) {
     <script defer src="/js/bundle.js"></script>
   </head>
   <body>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <main>${content}</main>
   </body>
 </html>`,
