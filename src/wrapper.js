@@ -1,8 +1,5 @@
-import prettier from 'prettier';
-
 export default function (content, preloadedState) {
-  return prettier.format(
-    `<!doctype html>
+  return `<!doctype html>
 <html lang="en">
   <head>
     <title>Isomorphic Example Page</title>
@@ -20,9 +17,5 @@ export default function (content, preloadedState) {
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <main>${content}</main>
   </body>
-</html>`,
-    {
-      parser: 'html',
-    }
-  );
+</html>`;
 }
