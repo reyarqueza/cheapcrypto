@@ -11,7 +11,7 @@ export default function Coin() {
   // avoid SSR, sorry no isomorphic here.
   if (typeof process !== 'object') {
     const coinId = params.coinId;
-    const endpoint = 'http://bahamut:3000/graphql';
+    const endpoint = 'http://localhost:3000/graphql';
     const query = gql`
       ${print(require('../graphql/coinMeta.graphql'))}
     `;
