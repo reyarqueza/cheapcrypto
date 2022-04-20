@@ -26,7 +26,7 @@ export class SignInWithGoogle extends Component {
       <div>
         <div
           id="g_id_onload"
-          data-client_id="972219867586-259thvukv868t5dqlq4tijv9l9vm7m5r.apps.googleusercontent.com"
+          data-client_id={process.env.GOOGLE_SIGN_IN_CLIENT_ID}
           data-callback={'handleCredentialResponse'}
           data-login_uri="https://cheapcrypto.app/"
           data-auto_prompt="false"

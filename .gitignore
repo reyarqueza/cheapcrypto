@@ -11,3 +11,6 @@ node_modules/
 
 # files built by build system
 public/js/*
+
+# dotenv
+.env
