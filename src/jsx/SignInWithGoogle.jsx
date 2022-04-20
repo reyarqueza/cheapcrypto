@@ -11,14 +11,23 @@ export class SignInWithGoogle extends Component {
   }
 
   handleCredentialResponse(response) {
-    const responsePayload = jwtDecode(response.credential);
+    const credential = jwtDecode(response.credential);
+    const params = new URLSearchParams({
+      firstName: credential.given_name,
+      lastName: credential.family_name,
+      picture: credential.picture,
+      id: credential.sub,
+    });
+    const urlString = `/signin?${params.toString()}`;
 
-    console.log('ID: ' + responsePayload.sub);
-    console.log('Full Name: ' + responsePayload.name);
-    console.log('Given Name: ' + responsePayload.given_name);
-    console.log('Family Name: ' + responsePayload.family_name);
-    console.log('Image URL: ' + responsePayload.picture);
-    console.log('Email: ' + responsePayload.email);
+    fetch(urlString, {
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log('login done', json);
+      })
+      .catch(error => console.log(error));
   }
 
   render() {

@@ -1,5 +1,6 @@
 import fetch from 'cross-fetch';
 import {config} from './config';
+import {MongoClient} from 'mongodb';
 
 export function getCoinList(
   minQuote,
@@ -56,4 +57,34 @@ export function getCoinInfo(contractAddress) {
         reject(error);
       });
   });
+}
+
+export function signIn({firstName, lastName, picture, id}) {
+  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+
+  async function signInResult() {
+    try {
+      await client.connect();
+
+      const database = client.db('cheapcrypto');
+      const users = database.collection('users');
+      const user = await users.findOne({id});
+
+      if (user) {
+        console.log('found existing user', user);
+      }
+
+      if (!user) {
+        // insert user
+        const result = await users.insertOne({firstName, lastName, picture, id});
+        console.log('inserted new user', result);
+      }
+
+      return JSON.stringify({firstName, lastName, picture, id});
+    } finally {
+      await client.close();
+    }
+  }
+
+  return signInResult().catch(console.dir);
 }

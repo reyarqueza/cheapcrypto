@@ -26,7 +26,7 @@ import Coins from './jsx/Coins.jsx';
 import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
-import {getCoinInfo, getCoinList} from './data';
+import {getCoinInfo, getCoinList, signIn} from './data';
 
 const app = express();
 const cache = apicache.middleware;
@@ -111,6 +111,25 @@ app.get('/get-coin-meta', cache('5 minutes'), (req, res) => {
   getCoinInfo(contractAddress).then(coinInfo => {
     res.send(coinInfo);
   });
+});
+
+app.post('/signin', (req, res) => {
+  async function runSignIn({firstName, lastName, picture, id}) {
+    try {
+      const result = await signIn({firstName, lastName, picture, id});
+      console.log('result', result);
+      res.send(result);
+    } catch (e) {
+      res.send(
+        JSON.stringify({
+          error: e,
+        })
+      );
+    }
+  }
+
+  const {firstName, lastName, picture, id} = req.query;
+  runSignIn({firstName, lastName, picture, id});
 });
 
 // start express
