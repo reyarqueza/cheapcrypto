@@ -29,8 +29,8 @@ function bigWordNumber(num, precision) {
     // quntillion
     return `${+(num / 1e18).toPrecision(precision)} Quntillion`;
   } else if (num >= 1e21 && num < 1e24) {
-    // sextillion
-    return `${+(num / 1e21).toPrecision(precision)} Sextillion`;
+    // sixtillion
+    return `${+(num / 1e21).toPrecision(precision)} Sixtillion`;
   } else if (num >= 1e24 && num < 1e27) {
     // septillion
     return `${+(num / 1e24).toPrecision(precision)} Septillion`;
