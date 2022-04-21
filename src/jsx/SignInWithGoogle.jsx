@@ -12,11 +12,13 @@ export class SignInWithGoogle extends Component {
 
   handleCredentialResponse(response) {
     const credential = jwtDecode(response.credential);
+    console.log('credential', credential);
     const params = new URLSearchParams({
       firstName: credential.given_name,
       lastName: credential.family_name,
       picture: credential.picture,
       id: credential.sub,
+      email: credential.email,
     });
     const urlString = `/signin?${params.toString()}`;
 

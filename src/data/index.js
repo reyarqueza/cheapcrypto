@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
 import {config} from './config';
 import {MongoClient} from 'mongodb';
+import bcrypt from 'bcrypt';
 
 export function getCoinList(
   minQuote,
@@ -59,8 +60,9 @@ export function getCoinInfo(contractAddress) {
   });
 }
 
-export function signIn({firstName, lastName, picture, id}) {
+export function signIn({firstName, lastName, picture, id, email}) {
   const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+  const saltRounds = 10;
 
   async function signInResult() {
     try {
@@ -68,19 +70,23 @@ export function signIn({firstName, lastName, picture, id}) {
 
       const database = client.db('cheapcrypto');
       const users = database.collection('users');
-      const user = await users.findOne({id});
+      const user = await users.findOne({email});
 
       if (user) {
-        console.log('found existing user', user);
+        const isTokenIdValid = await bcrypt.compare(id, user.id);
+
+        return isTokenIdValid
+          ? JSON.stringify({isTokenIdValid, firstName, lastName, picture, email})
+          : JSON.stringify({message: 'User token failed, no match.'});
       }
 
       if (!user) {
         // insert user
-        const result = await users.insertOne({firstName, lastName, picture, id});
-        console.log('inserted new user', result);
-      }
+        const hashedId = await bcrypt.hash(id, saltRounds);
+        const result = await users.insertOne({firstName, lastName, picture, id: hashedId, email});
 
-      return JSON.stringify({firstName, lastName, picture, id});
+        return JSON.stringify({firstName, lastName, picture, email});
+      }
     } finally {
       await client.close();
     }

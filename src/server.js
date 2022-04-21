@@ -114,10 +114,9 @@ app.get('/get-coin-meta', cache('5 minutes'), (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-  async function runSignIn({firstName, lastName, picture, id}) {
+  async function runSignIn({firstName, lastName, picture, id, email}) {
     try {
-      const result = await signIn({firstName, lastName, picture, id});
-      console.log('result', result);
+      const result = await signIn({firstName, lastName, picture, id, email});
       res.send(result);
     } catch (e) {
       res.send(
@@ -128,8 +127,8 @@ app.post('/signin', (req, res) => {
     }
   }
 
-  const {firstName, lastName, picture, id} = req.query;
-  runSignIn({firstName, lastName, picture, id});
+  const {firstName, lastName, picture, id, email} = req.query;
+  runSignIn({firstName, lastName, picture, id, email});
 });
 
 // start express
