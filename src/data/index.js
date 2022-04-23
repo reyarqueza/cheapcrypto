@@ -121,7 +121,7 @@ export function addToUserCollection({collectionKey, collectionValue, id, email})
         if (isTokenIdValid) {
           const document = await users.findOneAndUpdate(
             {email},
-            {$push: {[collectionKey]: collectionValue}},
+            {$addToSet: {[collectionKey]: collectionValue}},
             {
               upsert: true,
               returnDocument: 'after',
