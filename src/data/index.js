@@ -103,3 +103,38 @@ export function signIn({firstName, lastName, picture, id, email}) {
 
   return signInResult().catch(console.dir);
 }
+
+export function addToUserCollection({collectionKey, collectionValue, id, email}) {
+  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+
+  async function addToUserCollectionResult() {
+    try {
+      await client.connect();
+
+      const database = client.db('cheapcrypto');
+      const users = database.collection('users');
+      const user = await users.findOne({email});
+
+      if (user) {
+        const isTokenIdValid = await bcrypt.compare(id, user.id);
+
+        if (isTokenIdValid) {
+          const document = await users.findOneAndUpdate(
+            {email},
+            {$push: {[collectionKey]: collectionValue}},
+            {
+              upsert: true,
+              returnDocument: 'after',
+            }
+          );
+          return document.value[collectionKey];
+        }
+      }
+      return JSON.stringify({message: 'Error, no such user'});
+    } finally {
+      await client.close();
+    }
+  }
+
+  return addToUserCollectionResult().catch(console.dir);
+}
