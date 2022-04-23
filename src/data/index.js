@@ -74,18 +74,27 @@ export function signIn({firstName, lastName, picture, id, email}) {
 
       if (user) {
         const isTokenIdValid = await bcrypt.compare(id, user.id);
+        const {firstName, lastName, picture, email, joinDate} = user;
 
         return isTokenIdValid
-          ? JSON.stringify({isTokenIdValid, firstName, lastName, picture, email})
+          ? JSON.stringify({firstName, lastName, picture, email, joinDate})
           : JSON.stringify({message: 'User token failed, no match.'});
       }
 
       if (!user) {
         // insert user
         const hashedId = await bcrypt.hash(id, saltRounds);
-        const result = await users.insertOne({firstName, lastName, picture, id: hashedId, email});
+        const joinDate = Date.now();
+        const result = await users.insertOne({
+          firstName,
+          lastName,
+          picture,
+          id: hashedId,
+          email,
+          joinDate,
+        });
 
-        return JSON.stringify({firstName, lastName, picture, email});
+        return JSON.stringify({firstName, lastName, picture, email, joinDate});
       }
     } finally {
       await client.close();

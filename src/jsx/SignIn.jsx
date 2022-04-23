@@ -4,11 +4,28 @@ import ReactImageFallback from 'react-image-fallback';
 
 export default function SignIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [profileObj, setProfileObj] = useState({});
+  const [user, setUser] = useState({});
 
   const handleSuccess = response => {
-    setIsLoggedIn(true);
-    setProfileObj(response.profileObj);
+    const {email, givenName, googleId, familyName, imageUrl} = response && response.profileObj;
+    const params = new URLSearchParams({
+      firstName: givenName,
+      lastName: familyName,
+      picture: imageUrl,
+      id: googleId,
+      email,
+    });
+    const urlString = `/signin?${params.toString()}`;
+
+    fetch(urlString, {
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then(json => {
+        setIsLoggedIn(true);
+        setUser(json);
+      })
+      .catch(error => console.log(error));
   };
 
   const handleFailure = response => {
@@ -17,23 +34,25 @@ export default function SignIn() {
 
   const handleLogoutSuccess = () => {
     setIsLoggedIn(false);
-    setProfileObj({});
+    setUser({});
   };
 
   return isLoggedIn ? (
     <div>
-      {profileObj.email}
+      {user.email}
       <br />
-      {profileObj.givenName}
+      {user.firstName}
       <br />
-      {profileObj.familyName}
+      {user.lastName}
       <br />
       <ReactImageFallback
-        src={profileObj.imageUrl}
+        src={user.picture}
         fallbackImage="/images/icon-person.svg"
         alt="cool image should be here"
         className="my-image"
       />
+      <br />
+      Joined on {Date(user.joinDate)}
       <br />
       <GoogleLogout
         clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
