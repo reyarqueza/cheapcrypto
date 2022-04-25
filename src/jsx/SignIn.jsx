@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
 import ReactImageFallback from 'react-image-fallback';
+import {UserContext} from '../context';
 
 export default function SignIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+  const {user, setUser} = useContext(UserContext);
 
   const handleSuccess = response => {
     const {email, givenName, googleId, familyName, imageUrl} = response && response.profileObj;

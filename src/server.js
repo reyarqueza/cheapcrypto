@@ -7,7 +7,7 @@ import {fetchCoinMeta} from './graphql/coinMetaResolver';
 
 import apicache from 'apicache';
 import fetch from 'cross-fetch';
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router-dom/server';
 
@@ -27,6 +27,8 @@ import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
 import {getCoinInfo, getCoinList, signIn, addToUserCollection} from './data';
+
+import {UserContext} from './context';
 
 const app = express();
 const cache = apicache.middleware;
@@ -51,6 +53,29 @@ app.use(
 apicache.clear();
 
 // React SSR
+function App(props) {
+  const {store} = props;
+  const [user, setUser] = useState({});
+  const value = {user, setUser};
+
+  return (
+    <UserContext.Provider value={value}>
+      <Provider store={store}>
+        <StaticRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Coins />} />
+              <Route path="token-address" element={<Coin />}>
+                <Route path=":coinId" element={<Coin />} />
+              </Route>
+            </Route>
+          </Routes>
+        </StaticRouter>
+      </Provider>
+    </UserContext.Provider>
+  );
+}
+
 function init(req, res) {
   const params = new URLSearchParams({
     minQuote: '1e-23',
@@ -65,25 +90,7 @@ function init(req, res) {
       const store = createStore(reducer, preloadedState);
       const finalState = store.getState();
 
-      res.send(
-        wrapper(
-          ReactDOMServer.renderToString(
-            <Provider store={store}>
-              <StaticRouter>
-                <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route index element={<Coins />} />
-                    <Route path="token-address" element={<Coin />}>
-                      <Route path=":coinId" element={<Coin />} />
-                    </Route>
-                  </Route>
-                </Routes>
-              </StaticRouter>
-            </Provider>
-          ),
-          finalState
-        )
-      );
+      res.send(wrapper(ReactDOMServer.renderToString(<App store={store} />), finalState));
     })
     .catch(error => {
       console.log(error);

@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {print} from 'graphql';
 import {request, gql} from 'graphql-request';
+import AddRemove from './AddRemove.jsx';
 
 export default function Coin() {
   const params = useParams();
@@ -63,7 +64,8 @@ export default function Coin() {
 
   return (
     <div>
-      test test coin.jsx...
+      <AddRemove list={'coinWatchList'} value={id} />
+      <hr />
       <br />
       {id}
       <br />

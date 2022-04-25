@@ -100,34 +100,35 @@ class Coins extends PureComponent {
               <th>Self Reported Market Cap</th>
               <th>Quote</th>
             </tr>
-            {listings.map(prop => {
-              return (
-                <tr key={prop.platform.token_address}>
-                  <td>
-                    <Link to={`/token-address/${prop.platform.token_address}`}>{prop.name}</Link>
-                  </td>
-                  <td>{prop.symbol}</td>
-                  <td>{prop.platform.symbol}</td>
-                  <td>{prop.num_market_pairs}</td>
-                  <td>
-                    {formatDate(prop.date_added)}&nbsp;
-                    <strong title={formatTime(prop.date_added)}>&#9716;</strong>
-                  </td>
-                  <td>
-                    {formatDate(prop.last_updated)}&nbsp;
-                    <strong title={formatTime(prop.last_updated)}>&#9716;</strong>
-                  </td>
-                  <td>{formatNumber(prop.max_supply, 4)}</td>
-                  <td>{prop.circulating_supply}</td>
-                  <td>{prop.cmc_rank}</td>
-                  <td>{formatNumber(prop.self_reported_circulating_supply, 4)}</td>
-                  <td>{formatNumber(prop.self_reported_market_cap, 4)}</td>
-                  <td>
-                    <span style={{whiteSpace: 'nowrap'}}>{prop.quote.USD.price}</span>
-                  </td>
-                </tr>
-              );
-            })}
+            {listings &&
+              listings.map(prop => {
+                return (
+                  <tr key={prop.platform.token_address}>
+                    <td>
+                      <Link to={`/token-address/${prop.platform.token_address}`}>{prop.name}</Link>
+                    </td>
+                    <td>{prop.symbol}</td>
+                    <td>{prop.platform.symbol}</td>
+                    <td>{prop.num_market_pairs}</td>
+                    <td>
+                      {formatDate(prop.date_added)}&nbsp;
+                      <strong title={formatTime(prop.date_added)}>&#9716;</strong>
+                    </td>
+                    <td>
+                      {formatDate(prop.last_updated)}&nbsp;
+                      <strong title={formatTime(prop.last_updated)}>&#9716;</strong>
+                    </td>
+                    <td>{formatNumber(prop.max_supply, 4)}</td>
+                    <td>{prop.circulating_supply}</td>
+                    <td>{prop.cmc_rank}</td>
+                    <td>{formatNumber(prop.self_reported_circulating_supply, 4)}</td>
+                    <td>{formatNumber(prop.self_reported_market_cap, 4)}</td>
+                    <td>
+                      <span style={{whiteSpace: 'nowrap'}}>{prop.quote.USD.price}</span>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
@@ -20,20 +20,30 @@ delete window.__PRELOADED_STATE__;
 const store = createStore(reducer, preloadedState, applyMiddleware(thunk));
 const queryClient = new QueryClient();
 
-ReactDOM.hydrate(
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Coins />} />
-            <Route path="token-address" element={<Coin />}>
-              <Route path=":coinId" element={<Coin />} />
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </Provider>,
-  document.querySelector('main')
-);
+import {UserContext} from './context';
+
+function App(props) {
+  const [user, setUser] = useState({});
+  const value = {user, setUser};
+
+  return (
+    <UserContext.Provider value={value}>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Coins />} />
+                <Route path="token-address" element={<Coin />}>
+                  <Route path=":coinId" element={<Coin />} />
+                </Route>
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </Provider>
+    </UserContext.Provider>
+  );
+}
+
+ReactDOM.hydrate(<App />, document.querySelector('main'));

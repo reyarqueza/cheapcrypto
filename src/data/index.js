@@ -77,7 +77,7 @@ export function signIn({firstName, lastName, picture, id, email}) {
         const {firstName, lastName, picture, email, joinDate} = user;
 
         return isTokenIdValid
-          ? JSON.stringify({firstName, lastName, picture, email, joinDate})
+          ? JSON.stringify({firstName, lastName, picture, email, joinDate, id})
           : JSON.stringify({message: 'User token failed, no match.'});
       }
 
@@ -94,7 +94,7 @@ export function signIn({firstName, lastName, picture, id, email}) {
           joinDate,
         });
 
-        return JSON.stringify({firstName, lastName, picture, email, joinDate});
+        return JSON.stringify({firstName, lastName, picture, email, joinDate, id});
       }
     } finally {
       await client.close();
