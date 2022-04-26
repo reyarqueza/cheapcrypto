@@ -10,7 +10,7 @@ export default function AddRemove(props) {
   const mutation = useMutation(
     listItem => {
       const paramString = new URLSearchParams(listItem).toString();
-      return fetch(`/add-to-user-collection?${paramString}`, {
+      return fetch(`/update-user-collection?${paramString}`, {
         method: 'POST',
       }).then(response => response.json());
     },

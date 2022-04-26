@@ -26,7 +26,7 @@ import Coins from './jsx/Coins.jsx';
 import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
-import {getCoinInfo, getCoinList, signIn, addToUserCollection, getUserCollection} from './data';
+import {getCoinInfo, getCoinList, signIn, updateUserCollection, getUserCollection} from './data';
 
 import {UserContext} from './context';
 
@@ -138,9 +138,9 @@ app.post('/signin', (req, res) => {
   runSignIn({firstName, lastName, picture, id, email});
 });
 
-app.post('/add-to-user-collection', async (req, res) => {
+app.post('/update-user-collection', async (req, res) => {
   const {collectionKey, collectionValue, id, email} = req.query;
-  const json = await addToUserCollection({collectionKey, collectionValue, id, email});
+  const json = await updateUserCollection({collectionKey, collectionValue, id, email});
 
   res.send(json);
 });

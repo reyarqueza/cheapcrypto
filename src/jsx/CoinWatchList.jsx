@@ -34,7 +34,7 @@ export default function CoinWatchList(props) {
   return (
     <div className="coin-watchlist">
       {data.map(item => {
-        return <div>{item}</div>;
+        return <div key={item}>{item}</div>;
       })}
     </div>
   );

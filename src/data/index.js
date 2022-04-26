@@ -104,10 +104,10 @@ export function signIn({firstName, lastName, picture, id, email}) {
   return signInResult().catch(console.dir);
 }
 
-export function addToUserCollection({collectionKey, collectionValue, id, email}) {
+export function updateUserCollection({collectionKey, collectionValue, id, email}) {
   const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
 
-  async function addToUserCollectionResult() {
+  async function updateUserCollectionResult() {
     try {
       await client.connect();
 
@@ -136,7 +136,7 @@ export function addToUserCollection({collectionKey, collectionValue, id, email})
     }
   }
 
-  return addToUserCollectionResult().catch(console.dir);
+  return updateUserCollectionResult().catch(console.dir);
 }
 
 export async function getUserCollection({collectionKey, id, email}) {
