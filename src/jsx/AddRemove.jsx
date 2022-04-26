@@ -1,12 +1,12 @@
 import React from 'react';
-import {useQuery, useMutation} from 'react-query';
+import {useQueryClient, useMutation} from 'react-query';
 import fetch from 'cross-fetch';
 
 import {UserContext} from '../context';
 
 export default function AddRemove(props) {
-  const {list, value} = props;
-
+  const {collectionKey, collectionValue} = props;
+  const queryClient = useQueryClient();
   const mutation = useMutation(
     listItem => {
       const paramString = new URLSearchParams(listItem).toString();
@@ -17,15 +17,16 @@ export default function AddRemove(props) {
     {
       onSuccess: data => {
         console.log('onSuccess data', data);
-        queryClient.setQueryData('coinWatchList', data);
+        queryClient.setQueryData(collectionKey, data);
+        queryClient.invalidateQueries(collectionKey);
       },
     }
   );
 
   function handleAddRemove({id, email}) {
     mutation.mutate({
-      collectionKey: list,
-      collectionValue: value,
+      collectionKey,
+      collectionValue,
       id,
       email,
     });
