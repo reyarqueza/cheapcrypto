@@ -104,7 +104,7 @@ export function signIn({firstName, lastName, picture, id, email}) {
   return signInResult().catch(console.dir);
 }
 
-export function updateUserCollection({collectionKey, collectionValue, id, email}) {
+export function updateUserCollection({collectionKey, collectionValue, id, email, operation}) {
   const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
 
   async function updateUserCollectionResult() {
@@ -119,15 +119,32 @@ export function updateUserCollection({collectionKey, collectionValue, id, email}
         const isTokenIdValid = await bcrypt.compare(id, user.id);
 
         if (isTokenIdValid) {
-          const document = await users.findOneAndUpdate(
-            {email},
-            {$addToSet: {[collectionKey]: collectionValue}},
-            {
-              upsert: true,
-              returnDocument: 'after',
-            }
-          );
-          return document.value[collectionKey];
+          switch (operation) {
+            case 'add':
+              const documentAdd = await users.findOneAndUpdate(
+                {email},
+                {$addToSet: {[collectionKey]: collectionValue}},
+                {
+                  upsert: true,
+                  returnDocument: 'after',
+                }
+              );
+              return documentAdd.value[collectionKey];
+              break;
+            case 'remove':
+              const documentRemove = await users.findOneAndUpdate(
+                {email},
+                {$pull: {[collectionKey]: collectionValue}},
+                {
+                  upsert: true,
+                  returnDocument: 'after',
+                }
+              );
+              return documentRemove.value[collectionKey];
+              break;
+            default:
+              return JSON.stringify({message: 'Error, no such operation'});
+          }
         }
       }
       return JSON.stringify({message: 'Error, no such user'});

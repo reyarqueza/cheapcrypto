@@ -139,8 +139,8 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/update-user-collection', async (req, res) => {
-  const {collectionKey, collectionValue, id, email} = req.query;
-  const json = await updateUserCollection({collectionKey, collectionValue, id, email});
+  const {collectionKey, collectionValue, id, email, operation} = req.query;
+  const json = await updateUserCollection({collectionKey, collectionValue, id, email, operation});
 
   res.send(json);
 });
