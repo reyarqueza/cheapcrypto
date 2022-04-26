@@ -138,3 +138,28 @@ export function addToUserCollection({collectionKey, collectionValue, id, email})
 
   return addToUserCollectionResult().catch(console.dir);
 }
+
+export async function getUserCollection({collectionKey, id, email}) {
+  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const users = database.collection('users');
+    const user = await users.findOne({email});
+
+    if (user) {
+      const isTokenIdValid = await bcrypt.compare(id, user.id);
+
+      if (isTokenIdValid) {
+        const document = await users.findOne({email});
+
+        return document[collectionKey];
+      }
+    }
+    return JSON.stringify({message: 'Error, no such user'});
+  } finally {
+    await client.close();
+  }
+}
