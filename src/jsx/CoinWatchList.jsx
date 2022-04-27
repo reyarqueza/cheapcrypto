@@ -14,15 +14,15 @@ export default function CoinWatchList(props) {
     email,
     collectionKey: 'coinWatchList',
   });
-  const {isLoading, isError, data, error} = useQuery('coinWatchList', async () => {
-    return id
-      ? await fetch(`/get-user-collection?${params}`).then(response => response.json())
-      : null;
-  });
 
   if (Object.keys(user).length === 0) {
     return <div className="coin-watchlist"></div>;
   }
+
+  const {isLoading, isError, data, error} = useQuery(
+    'coinWatchList',
+    async () => await fetch(`/get-user-collection?${params}`).then(response => response.json())
+  );
 
   if (isLoading) {
     return <span>Loading...</span>;
