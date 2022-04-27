@@ -73,22 +73,52 @@ export default function Coin() {
       <br />
       {symbol}
       <br />
-      {logo}
+      <img src={logo} />
       <br />
       {description}
       <br />
       {subreddit}
       <br />
-      {website} <br />
-      {twitter} <br />
-      {message_board} <br />
-      {chat} <br />
-      {facebook} <br />
-      {explorer} <br />
-      {reddit} <br />
-      {technical_doc} <br />
-      {source_code} <br />
-      {announcement} <br />
+      <a href={website} target="_blank">
+        {website}
+      </a>
+      <br />
+      <a href={twitter} target="_blank">
+        {twitter}
+      </a>
+      <br />
+      <a href={message_board} target="_blank">
+        {message_board}
+      </a>
+      <br />
+      <a href={chat} target="_blank">
+        {chat}
+      </a>
+      <br />
+      <a href={facebook} target="_blank">
+        {facebook}
+      </a>
+      <br />
+      <a href={explorer} target="_blank">
+        {explorer}
+      </a>
+      <br />
+      <a href={reddit} target="_blank">
+        {reddit}
+      </a>
+      <br />
+      <a href={technical_doc} target="_blank">
+        {technical_doc}
+      </a>
+      <br />
+      <a href={source_code} target="_blank">
+        {source_code}
+      </a>
+      <br />
+      <a href={announcement} target="_blank">
+        {announcement}
+      </a>
+      <br />
       <br />
       {date_added}
       <br />

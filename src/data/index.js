@@ -52,12 +52,35 @@ export function getCoinInfo(contractAddress) {
       .then(json => {
         // api wraps json blob with key of coin, so remove that wrapper
         // with Object.values
-        resolve(json && json.data && Object.values(json.data)[0]);
+        const coinInfo = json && json.data && Object.values(json.data)[0];
+
+        updateCoinInfo({coinInfo});
+        resolve(coinInfo);
       })
       .catch(error => {
         reject(error);
       });
   });
+}
+
+export async function updateCoinInfo({coinInfo}) {
+  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const coins = database.collection('coins');
+
+    try {
+      const result = await coins.replaceOne({id: coinInfo.id}, coinInfo, {upsert: true});
+      return JSON.stringify(result);
+    } catch (e) {
+      return JSON.stringify({error: e});
+    }
+  } finally {
+    await client.close();
+  }
 }
 
 export function signIn({firstName, lastName, picture, id, email}) {
