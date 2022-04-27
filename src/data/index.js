@@ -152,7 +152,6 @@ export async function updateUserCollection({collectionKey, collectionValue, id, 
               }
             );
             return documentAdd.value[collectionKey];
-            break;
           case 'remove':
             const documentRemove = await users.findOneAndUpdate(
               {email},
@@ -163,7 +162,6 @@ export async function updateUserCollection({collectionKey, collectionValue, id, 
               }
             );
             return documentRemove.value[collectionKey];
-            break;
           default:
             return JSON.stringify({message: 'Error, no such operation'});
         }
