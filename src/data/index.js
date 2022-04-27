@@ -3,6 +3,8 @@ import {config} from './config';
 import {MongoClient} from 'mongodb';
 import bcrypt from 'bcrypt';
 
+const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
+
 export function getCoinList(
   minQuote,
   maxQuote,
@@ -64,8 +66,6 @@ export function getCoinInfo(contractAddress) {
 }
 
 export async function updateCoinInfo({coinInfo}) {
-  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
-
   try {
     await client.connect();
 
@@ -78,13 +78,12 @@ export async function updateCoinInfo({coinInfo}) {
     } catch (e) {
       return JSON.stringify({error: e});
     }
-  } finally {
-    await client.close();
+  } catch (e) {
+    console.log(e);
   }
 }
 
 export function signIn({firstName, lastName, picture, id, email}) {
-  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
   const saltRounds = 10;
 
   async function signInResult() {
@@ -119,8 +118,8 @@ export function signIn({firstName, lastName, picture, id, email}) {
 
         return JSON.stringify({firstName, lastName, picture, email, joinDate, id});
       }
-    } finally {
-      await client.close();
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -128,12 +127,11 @@ export function signIn({firstName, lastName, picture, id, email}) {
 }
 
 export async function updateUserCollection({collectionKey, collectionValue, id, email, operation}) {
-  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
-
   try {
     await client.connect();
 
     const database = client.db('cheapcrypto');
+    const coins = database.collection('coins');
     const users = database.collection('users');
     const user = await users.findOne({email});
 
@@ -141,9 +139,12 @@ export async function updateUserCollection({collectionKey, collectionValue, id, 
       const isTokenIdValid = await bcrypt.compare(id, user.id);
 
       if (isTokenIdValid) {
+        let userDocument;
+        let collectionIds;
+
         switch (operation) {
-          case 'add':
-            const documentAdd = await users.findOneAndUpdate(
+          case 'add': {
+            userDocument = await users.findOneAndUpdate(
               {email},
               {$addToSet: {[collectionKey]: collectionValue}},
               {
@@ -151,9 +152,10 @@ export async function updateUserCollection({collectionKey, collectionValue, id, 
                 returnDocument: 'after',
               }
             );
-            return documentAdd.value[collectionKey];
-          case 'remove':
-            const documentRemove = await users.findOneAndUpdate(
+            break;
+          }
+          case 'remove': {
+            userDocument = await users.findOneAndUpdate(
               {email},
               {$pull: {[collectionKey]: collectionValue}},
               {
@@ -161,25 +163,34 @@ export async function updateUserCollection({collectionKey, collectionValue, id, 
                 returnDocument: 'after',
               }
             );
-            return documentRemove.value[collectionKey];
+            break;
+          }
           default:
             return JSON.stringify({message: 'Error, no such operation'});
         }
+
+        collectionIds = userDocument.value[collectionKey];
+        const collections = await Promise.all(
+          collectionIds.map(
+            async collectionId => await coins.findOne({id: collectionId}).then(result => result)
+          )
+        );
+
+        return collections;
       }
     }
     return JSON.stringify({message: 'Error, no such user'});
-  } finally {
-    await client.close();
+  } catch (e) {
+    console.log(e);
   }
 }
 
 export async function getUserCollection({collectionKey, id, email}) {
-  const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
-
   try {
     await client.connect();
 
     const database = client.db('cheapcrypto');
+    const coins = database.collection('coins');
     const users = database.collection('users');
     const user = await users.findOne({email});
 
@@ -189,11 +200,22 @@ export async function getUserCollection({collectionKey, id, email}) {
       if (isTokenIdValid) {
         const document = await users.findOne({email});
 
-        return document[collectionKey];
+        if (!document[collectionKey]) {
+          return JSON.stringify([]);
+        }
+
+        const collectionIds = document[collectionKey];
+        const collections = await Promise.all(
+          collectionIds.map(
+            async collectionId => await coins.findOne({id: collectionId}).then(result => result)
+          )
+        );
+
+        return collections;
       }
     }
     return JSON.stringify({message: 'Error, no such user'});
-  } finally {
-    await client.close();
+  } catch (e) {
+    console.log(e);
   }
 }

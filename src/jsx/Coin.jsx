@@ -64,7 +64,7 @@ export default function Coin() {
 
   return (
     <div>
-      <AddRemove collectionKey={'coinWatchList'} collectionValue={id} />
+      <AddRemove collectionKey={'coins'} collectionValue={id} />
       <hr />
       <br />
       {id}

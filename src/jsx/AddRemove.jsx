@@ -18,7 +18,9 @@ export default function AddRemove(props) {
       return await fetch(`/get-user-collection?${params}`).then(response => response.json());
     }
   });
-  const operation = data && data.includes(collectionValue.toString()) ? 'remove' : 'add';
+
+  const collectionIds = data && data.map(coin => coin.id);
+  const operation = collectionIds && collectionIds.includes(collectionValue) ? 'remove' : 'add';
   const queryClient = useQueryClient();
   const mutation = useMutation(
     listItem => {

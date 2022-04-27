@@ -1,5 +1,6 @@
 import React from 'react';
 import {useQuery} from 'react-query';
+import {Link} from 'react-router-dom';
 
 export default function CoinWatchList(props) {
   // avoid SSR, sorry no isomorphic here.
@@ -12,7 +13,7 @@ export default function CoinWatchList(props) {
   const params = new URLSearchParams({
     id,
     email,
-    collectionKey: 'coinWatchList',
+    collectionKey: 'coins',
   });
 
   if (Object.keys(user).length === 0) {
@@ -20,7 +21,7 @@ export default function CoinWatchList(props) {
   }
 
   const {isLoading, isError, data, error} = useQuery(
-    'coinWatchList',
+    'coins',
     async () => await fetch(`/get-user-collection?${params}`).then(response => response.json())
   );
 
@@ -33,11 +34,36 @@ export default function CoinWatchList(props) {
   }
 
   return (
-    <div className="coin-watchlist">
-      {data &&
-        data.map(item => {
-          return <div key={item}>{item}</div>;
-        })}
-    </div>
+    <>
+      <h3>Your crypto watchlist</h3>
+      <table className="coin-watchlist">
+        <tbody>
+          {data &&
+            data.map(item => {
+              return (
+                <tr key={item.id}>
+                  <td>
+                    <Link to={`/token-address/${item.platform.token_address}`}>
+                      <img
+                        style={{
+                          imageRendering: 'pixelated',
+                          border: '5px solid gold',
+                          borderRadius: '50px',
+                        }}
+                        width="45"
+                        src={item.logo}
+                        alt="logo"
+                      />
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/token-address/${item.platform.token_address}`}>{item.name}</Link>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+    </>
   );
 }
