@@ -7,7 +7,9 @@ import {UserContext} from '../context';
 export default function Layout() {
   return (
     <div>
-      <h1>cheapcrypto.app</h1>
+      <h1>
+        <Link to="/">cheapcrypto.app</Link>
+      </h1>
       <SignIn />
       <UserContext.Consumer>
         {user => {
