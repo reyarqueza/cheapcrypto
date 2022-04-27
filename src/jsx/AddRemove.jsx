@@ -1,11 +1,24 @@
-import React from 'react';
-import {useQueryClient, useMutation} from 'react-query';
+import React, {useContext} from 'react';
+import {useQueryClient, useQuery, useMutation} from 'react-query';
 import fetch from 'cross-fetch';
 
 import {UserContext} from '../context';
 
 export default function AddRemove(props) {
   const {collectionKey, collectionValue} = props;
+  const user = useContext(UserContext).user;
+  const {id, email} = user;
+  const params = new URLSearchParams({
+    id,
+    email,
+    collectionKey,
+  });
+  const {data} = useQuery(collectionKey, async () => {
+    if (id) {
+      return await fetch(`/get-user-collection?${params}`).then(response => response.json());
+    }
+  });
+  const operation = data && data.includes(collectionValue.toString()) ? 'remove' : 'add';
   const queryClient = useQueryClient();
   const mutation = useMutation(
     listItem => {
@@ -23,43 +36,30 @@ export default function AddRemove(props) {
     }
   );
 
-  function handleAddRemove({id, email}) {
+  function handleAddRemove() {
     mutation.mutate({
       collectionKey,
       collectionValue,
       id,
       email,
+      operation,
     });
   }
 
+  if (Object.keys(user).length === 0) {
+    return <div className="add-remove" />;
+  }
+
+  if (!data) {
+    return <div className="add-remove" />;
+  }
+
   return (
-    <UserContext.Consumer>
-      {user => {
-        if (!user) {
-          return <div className="add-remove"></div>;
-        }
-
-        return (
-          <div className="add-remove">
-            <button
-              onClick={() => {
-                handleAddRemove(user.user);
-              }}
-            >
-              Add to watchlist
-            </button>
-            {mutation.isLoading ? (
-              <p>Adding...</p>
-            ) : (
-              <>
-                {mutation.isError ? <p>Error: {mutation.error.message}</p> : null}
-
-                {mutation.isSuccess ? <div>Added to watchlist!</div> : null}
-              </>
-            )}
-          </div>
-        );
-      }}
-    </UserContext.Consumer>
+    <div className="add-remove">
+      {operation === 'remove' ? 'This coin is in your watchlist' : null}
+      <button onClick={handleAddRemove}>
+        {`${operation} ${operation === 'add' ? 'to' : 'from'}`} watchlist
+      </button>
+    </div>
   );
 }

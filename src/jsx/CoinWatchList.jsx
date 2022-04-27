@@ -8,11 +8,6 @@ export default function CoinWatchList(props) {
   }
 
   const {user} = props;
-
-  if (Object.keys(user).length === 0) {
-    return <div className="coin-watchlist"></div>;
-  }
-
   const {id, email} = user;
   const params = new URLSearchParams({
     id,
@@ -20,8 +15,14 @@ export default function CoinWatchList(props) {
     collectionKey: 'coinWatchList',
   });
   const {isLoading, isError, data, error} = useQuery('coinWatchList', async () => {
-    return await fetch(`/get-user-collection?${params}`).then(response => response.json());
+    return id
+      ? await fetch(`/get-user-collection?${params}`).then(response => response.json())
+      : null;
   });
+
+  if (Object.keys(user).length === 0) {
+    return <div className="coin-watchlist"></div>;
+  }
 
   if (isLoading) {
     return <span>Loading...</span>;
@@ -33,9 +34,10 @@ export default function CoinWatchList(props) {
 
   return (
     <div className="coin-watchlist">
-      {data.map(item => {
-        return <div key={item}>{item}</div>;
-      })}
+      {data &&
+        data.map(item => {
+          return <div key={item}>{item}</div>;
+        })}
     </div>
   );
 }

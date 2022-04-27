@@ -11,6 +11,8 @@ import React, {useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router-dom/server';
 
+import {QueryClient, QueryClientProvider} from 'react-query';
+
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
@@ -57,20 +59,23 @@ function App(props) {
   const {store} = props;
   const [user, setUser] = useState({});
   const value = {user, setUser};
+  const queryClient = new QueryClient();
 
   return (
     <UserContext.Provider value={value}>
       <Provider store={store}>
-        <StaticRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Coins />} />
-              <Route path="token-address" element={<Coin />}>
-                <Route path=":coinId" element={<Coin />} />
+        <QueryClientProvider client={queryClient}>
+          <StaticRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Coins />} />
+                <Route path="token-address" element={<Coin />}>
+                  <Route path=":coinId" element={<Coin />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </StaticRouter>
+            </Routes>
+          </StaticRouter>
+        </QueryClientProvider>
       </Provider>
     </UserContext.Provider>
   );

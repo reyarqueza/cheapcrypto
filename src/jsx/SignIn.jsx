@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import {useQueryClient} from 'react-query';
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
 import ReactImageFallback from 'react-image-fallback';
 import {UserContext} from '../context';
@@ -6,6 +7,7 @@ import {UserContext} from '../context';
 export default function SignIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const {user, setUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
 
   const handleSuccess = response => {
     const {email, givenName, googleId, familyName, imageUrl} = response && response.profileObj;
@@ -25,6 +27,10 @@ export default function SignIn() {
       .then(json => {
         setIsLoggedIn(true);
         setUser(json);
+        // tell React Query to refetch all queries.. doesnt' seem to be working..
+        // TODO, get queries to run after user context is loaded.
+        //console.log('about to invalidate');
+        //queryClient.invalidateQueries();
       })
       .catch(error => console.log(error));
   };
