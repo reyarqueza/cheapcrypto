@@ -127,56 +127,52 @@ export function signIn({firstName, lastName, picture, id, email}) {
   return signInResult().catch(console.dir);
 }
 
-export function updateUserCollection({collectionKey, collectionValue, id, email, operation}) {
+export async function updateUserCollection({collectionKey, collectionValue, id, email, operation}) {
   const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
 
-  async function updateUserCollectionResult() {
-    try {
-      await client.connect();
+  try {
+    await client.connect();
 
-      const database = client.db('cheapcrypto');
-      const users = database.collection('users');
-      const user = await users.findOne({email});
+    const database = client.db('cheapcrypto');
+    const users = database.collection('users');
+    const user = await users.findOne({email});
 
-      if (user) {
-        const isTokenIdValid = await bcrypt.compare(id, user.id);
+    if (user) {
+      const isTokenIdValid = await bcrypt.compare(id, user.id);
 
-        if (isTokenIdValid) {
-          switch (operation) {
-            case 'add':
-              const documentAdd = await users.findOneAndUpdate(
-                {email},
-                {$addToSet: {[collectionKey]: collectionValue}},
-                {
-                  upsert: true,
-                  returnDocument: 'after',
-                }
-              );
-              return documentAdd.value[collectionKey];
-              break;
-            case 'remove':
-              const documentRemove = await users.findOneAndUpdate(
-                {email},
-                {$pull: {[collectionKey]: collectionValue}},
-                {
-                  upsert: true,
-                  returnDocument: 'after',
-                }
-              );
-              return documentRemove.value[collectionKey];
-              break;
-            default:
-              return JSON.stringify({message: 'Error, no such operation'});
-          }
+      if (isTokenIdValid) {
+        switch (operation) {
+          case 'add':
+            const documentAdd = await users.findOneAndUpdate(
+              {email},
+              {$addToSet: {[collectionKey]: collectionValue}},
+              {
+                upsert: true,
+                returnDocument: 'after',
+              }
+            );
+            return documentAdd.value[collectionKey];
+            break;
+          case 'remove':
+            const documentRemove = await users.findOneAndUpdate(
+              {email},
+              {$pull: {[collectionKey]: collectionValue}},
+              {
+                upsert: true,
+                returnDocument: 'after',
+              }
+            );
+            return documentRemove.value[collectionKey];
+            break;
+          default:
+            return JSON.stringify({message: 'Error, no such operation'});
         }
       }
-      return JSON.stringify({message: 'Error, no such user'});
-    } finally {
-      await client.close();
     }
+    return JSON.stringify({message: 'Error, no such user'});
+  } finally {
+    await client.close();
   }
-
-  return updateUserCollectionResult().catch(console.dir);
 }
 
 export async function getUserCollection({collectionKey, id, email}) {
