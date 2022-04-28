@@ -1,6 +1,13 @@
 import React from 'react';
 import {useQuery} from 'react-query';
 import {Link} from 'react-router-dom';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 
 export default function CoinWatchList(props) {
   // avoid SSR, sorry no isomorphic here.
@@ -15,18 +22,26 @@ export default function CoinWatchList(props) {
     email,
     collectionKey: 'coins',
   });
-
-  if (Object.keys(user).length === 0) {
-    return <div className="coin-watchlist"></div>;
-  }
-
   const {isLoading, isError, data, error} = useQuery(
     'coins',
     async () => await fetch(`/get-user-collection?${params}`).then(response => response.json())
   );
 
   if (isLoading) {
-    return <span>Loading...</span>;
+    return (
+      <div className="coin-watchlist">
+        <Typography variant="h6" m={2} gutterBottom component="h6">
+          Your Watchlist
+        </Typography>
+        <Box m={2}>
+          <Paper>
+            <Stack p={2} direction="row" spacing={1}>
+              <LinearProgress />
+            </Stack>
+          </Paper>
+        </Box>
+      </div>
+    );
   }
 
   if (isError) {
@@ -34,36 +49,30 @@ export default function CoinWatchList(props) {
   }
 
   return (
-    <>
-      <h3>Your crypto watchlist</h3>
-      <table className="coin-watchlist">
-        <tbody>
-          {data &&
-            data.map(item => {
-              return (
-                <tr key={item.id}>
-                  <td>
-                    <Link to={`/token-address/${item.platform.token_address}`}>
-                      <img
-                        style={{
-                          imageRendering: 'pixelated',
-                          border: '5px solid gold',
-                          borderRadius: '50px',
-                        }}
-                        width="45"
-                        src={item.logo}
-                        alt="logo"
-                      />
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to={`/token-address/${item.platform.token_address}`}>{item.name}</Link>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
-    </>
+    <div className="coin-watchlist">
+      <Typography variant="h6" m={2} gutterBottom component="h6">
+        Your Watchlist
+      </Typography>
+      <Box m={2}>
+        <Paper elevation={3}>
+          <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
+            {data &&
+              data.map(item => {
+                return (
+                  <Chip
+                    key={item.id}
+                    component={Link}
+                    to={`/token-address/${item.platform.token_address}`}
+                    clickable
+                    avatar={<Avatar alt={item.name} src={item.logo} />}
+                    label={item.name}
+                    sx={{margin: '4px'}}
+                  />
+                );
+              })}
+          </Stack>
+        </Paper>
+      </Box>
+    </div>
   );
 }
