@@ -1,6 +1,8 @@
 import React, {useState, useContext} from 'react';
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
-import ReactImageFallback from 'react-image-fallback';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import {deepOrange} from '@mui/material/colors';
 import {UserContext} from '../context';
 
 export default function SignIn() {
@@ -39,30 +41,16 @@ export default function SignIn() {
   };
 
   return isLoggedIn ? (
-    <div>
-      {user.email}
-      <br />
-      {user.firstName}
-      <br />
-      {user.lastName}
-      <br />
-      <ReactImageFallback
-        src={user.picture}
-        fallbackImage="/images/icon-person.svg"
-        alt="cool image should be here"
-        className="my-image"
-      />
-      <br />
-      Joined on {Date(user.joinDate)}
-      <br />
+    <Stack direction="row" spacing={2}>
+      <Avatar sx={{bgcolor: deepOrange[500]}} src={user.picture} alt={user.firstName} />
       <GoogleLogout
-        clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+        clientId={process.env.GOOGLE_SIGN_IN_CLIENT_ID}
         buttonText="Sign Out"
         onLogoutSuccess={handleLogoutSuccess}
         onFailure={handleFailure}
         theme="dark"
       ></GoogleLogout>
-    </div>
+    </Stack>
   ) : (
     <GoogleLogin
       clientId={process.env.GOOGLE_SIGN_IN_CLIENT_ID}

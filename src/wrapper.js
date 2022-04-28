@@ -8,6 +8,14 @@ export default function (content, preloadedState) {
     <meta name="keywords" content="isomorphic web page, react, server side render" />
     <link rel="icon" href="/images/favicon.ico" />
     <link rel="stylesheet" media="screen" href="/css/styles.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
     <script defer>
     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
     </script>
