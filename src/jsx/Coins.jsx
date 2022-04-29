@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Link, Outlet} from 'react-router-dom';
+import {DataGrid} from '@mui/x-data-grid';
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
@@ -55,20 +56,23 @@ function formatNumber(num, precision) {
   }
 
   if (num < 1e6) {
-    return (
-      <>
-        {Number(num).toLocaleString()}&nbsp;
-        <strong title={coinMarketCapNumber(num, precision)}>&#8858;</strong>
-      </>
-    );
+    // return (
+    //   <>
+    //     {Number(num).toLocaleString()}&nbsp;
+    //     <strong title={coinMarketCapNumber(num, precision)}>&#8858;</strong>
+    //   </>
+    // );
+    return Number(num).toLocaleString();
   }
 
-  return (
-    <>
-      <span>{coinMarketCapNumber(num, precision)}&nbsp;</span>
-      <strong title={Number(num).toLocaleString()}>&#8858;</strong>
-    </>
-  );
+  return coinMarketCapNumber(num, precision);
+
+  // return (
+  //   <>
+  //     <span>{coinMarketCapNumber(num, precision)}&nbsp;</span>
+  //     <strong title={Number(num).toLocaleString()}>&#8858;</strong>
+  //   </>
+  // );
 }
 
 function mapStateToProps(state) {
@@ -81,9 +85,60 @@ class Coins extends PureComponent {
   render() {
     const {listings} = this.props;
 
+    const columns = [
+      {
+        // field: {
+        //   field: 'tokenName',
+        //   field: 'tokenAddress',
+        // },
+        field: 'name',
+        headerName: 'Name',
+        // renderCell: params => (
+        //   <Link to={`/token-address/${params.value.tokenAddress}`}>{params.value.tokenName}</Link>
+        // ),
+      },
+      {field: 'symbol', headerName: 'Symbol'},
+      {field: 'platform', headerName: 'Platform'},
+      {field: 'numMarketPairs', headerName: 'Num Market Pairs'},
+      {field: 'dateAdded', headerName: 'Date Added'},
+      {field: 'lastUpdated', headerName: 'Last Updated'},
+      {field: 'maxSupply', headerName: 'Max Supply'},
+      // {field: 'circulatingSupply', headerName: 'Circulating Supply'},
+      {field: 'cmcRank', headerName: 'CMC Rank'},
+      {field: 'selfReportedCirculatingSupply', headerName: 'Self Reported Circulating Supply'},
+      {field: 'selfReportedMarketCap', headerName: 'Self Reported Market Cap'},
+      {field: 'quote', headerName: 'Quote'},
+    ];
+
+    const rows =
+      listings &&
+      listings.map(prop => ({
+        id: prop.id,
+        // tokenName: {
+        //   tokenName: prop.name,
+        //   tokenAddress: prop.platform.token_address,
+        // },
+        name: prop.name,
+        symbol: prop.symbol,
+        platform: prop.platform.symbol,
+        numMarketPairs: prop.num_market_pairs,
+        dateAdded: `${formatDate(prop.date_added)} ${formatTime(prop.date_added)}`,
+        lastUpdated: `${formatDate(prop.last_updated)} ${formatTime(prop.last_updated)}`,
+        maxSupply: `${formatNumber(prop.max_supply, 4)}`,
+        // circulatingSupply: prop.circulating_supply,
+        cmcRank: prop.cmc_rank,
+        selfReportedCirculatingSupply: `${formatNumber(prop.self_reported_circulating_supply, 4)}`,
+        selfReportedMarketCap: `${formatNumber(prop.self_reported_market_cap, 4)}`,
+        quote: prop.quote.USD.price,
+      }));
+
     return (
       <div>
         <Outlet />
+
+        <div style={{height: 800, width: '100%'}}>
+          <DataGrid rows={rows} columns={columns} pageSize={20} rowsPerPageOptions={[20]} />
+        </div>
         <table border="1" cellPadding="5">
           <tbody>
             <tr>

@@ -34,11 +34,9 @@ export default function CoinWatchList(props) {
           Your Watchlist
         </Typography>
         <Box m={2}>
-          <Paper>
-            <Stack p={2} direction="row" spacing={1}>
-              <LinearProgress />
-            </Stack>
-          </Paper>
+          <Stack p={2} direction="row" spacing={1}>
+            <LinearProgress />
+          </Stack>
         </Box>
       </div>
     );
@@ -54,24 +52,22 @@ export default function CoinWatchList(props) {
         Your Watchlist
       </Typography>
       <Box m={2}>
-        <Paper elevation={3}>
-          <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
-            {data &&
-              data.map(item => {
-                return (
-                  <Chip
-                    key={item.id}
-                    component={Link}
-                    to={`/token-address/${item.platform.token_address}`}
-                    clickable
-                    avatar={<Avatar alt={item.name} src={item.logo} />}
-                    label={item.name}
-                    sx={{margin: '4px'}}
-                  />
-                );
-              })}
-          </Stack>
-        </Paper>
+        <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
+          {data &&
+            data.map(item => {
+              return (
+                <Chip
+                  key={item.id}
+                  component={Link}
+                  to={`/token-address/${item.platform.token_address}`}
+                  clickable
+                  avatar={<Avatar alt={item.name} src={item.logo} />}
+                  label={item.name}
+                  sx={{margin: '4px'}}
+                />
+              );
+            })}
+        </Stack>
       </Box>
     </div>
   );
