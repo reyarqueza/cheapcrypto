@@ -7,11 +7,11 @@ import UserAppBar from './UserAppBar.jsx';
 import {UserContext} from '../context';
 
 export default function Layout() {
-  const [dismissProgress, setDismissProgress] = useState(false);
+  // const [dismissProgress, setDismissProgress] = useState(false);
 
-  setTimeout(() => {
-    setDismissProgress(true);
-  }, 1000);
+  // setTimeout(() => {
+  //   setDismissProgress(true);
+  // }, 1000);
 
   return (
     <div>
@@ -19,15 +19,15 @@ export default function Layout() {
       <UserContext.Consumer>
         {user => {
           if (user && user.user && Object.keys(user.user).length === 0) {
-            if (!dismissProgress) {
-              return (
-                <div className="coin-watchlist">
-                  <Box m={2}>
-                    <LinearProgress />
-                  </Box>
-                </div>
-              );
-            }
+            // if (!dismissProgress) {
+            //   return (
+            //     <div className="coin-watchlist">
+            //       <Box m={2}>
+            //         <LinearProgress />
+            //       </Box>
+            //     </div>
+            //   );
+            // }
             return <div className="coin-watchlist"></div>;
           }
           return <CoinWatchList user={user && user.user} />;
