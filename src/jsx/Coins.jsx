@@ -1,7 +1,16 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Link, Outlet} from 'react-router-dom';
-import {DataGrid} from '@mui/x-data-grid';
+import {styled} from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import MyTooltip from './MyTooltip.jsx';
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
@@ -11,6 +20,20 @@ function formatDate(dateStr) {
 function formatTime(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleTimeString();
+}
+
+function formatSmallNumber(num) {
+  let firstPart;
+  let secondPart;
+
+  if (num > 1) {
+    return num;
+  }
+
+  firstPart = num.toString().split('.')[1].split('e')[0].length;
+  secondPart = num.toString().split('-')[1];
+
+  return num.toFixed(Number(firstPart) + Number(secondPart));
 }
 
 function bigWordNumber(num, precision) {
@@ -56,23 +79,10 @@ function formatNumber(num, precision) {
   }
 
   if (num < 1e6) {
-    // return (
-    //   <>
-    //     {Number(num).toLocaleString()}&nbsp;
-    //     <strong title={coinMarketCapNumber(num, precision)}>&#8858;</strong>
-    //   </>
-    // );
     return Number(num).toLocaleString();
   }
 
   return coinMarketCapNumber(num, precision);
-
-  // return (
-  //   <>
-  //     <span>{coinMarketCapNumber(num, precision)}&nbsp;</span>
-  //     <strong title={Number(num).toLocaleString()}>&#8858;</strong>
-  //   </>
-  // );
 }
 
 function mapStateToProps(state) {
@@ -85,108 +95,147 @@ class Coins extends PureComponent {
   render() {
     const {listings} = this.props;
 
+    const StyledTableCell = styled(TableCell)(({theme}) => ({
+      [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+      },
+    }));
+
+    const StyledTableRow = styled(TableRow)(({theme}) => ({
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+      // hide last border
+      '&:last-child td, &:last-child th': {
+        border: 0,
+      },
+    }));
+
     const columns = [
       {
-        // field: {
-        //   field: 'tokenName',
-        //   field: 'tokenAddress',
-        // },
+        id: 1,
         field: 'name',
         headerName: 'Name',
-        // renderCell: params => (
-        //   <Link to={`/token-address/${params.value.tokenAddress}`}>{params.value.tokenName}</Link>
-        // ),
       },
-      {field: 'symbol', headerName: 'Symbol'},
-      {field: 'platform', headerName: 'Platform'},
-      {field: 'numMarketPairs', headerName: 'Num Market Pairs'},
-      {field: 'dateAdded', headerName: 'Date Added'},
-      {field: 'lastUpdated', headerName: 'Last Updated'},
-      {field: 'maxSupply', headerName: 'Max Supply'},
-      // {field: 'circulatingSupply', headerName: 'Circulating Supply'},
-      {field: 'cmcRank', headerName: 'CMC Rank'},
-      {field: 'selfReportedCirculatingSupply', headerName: 'Self Reported Circulating Supply'},
-      {field: 'selfReportedMarketCap', headerName: 'Self Reported Market Cap'},
-      {field: 'quote', headerName: 'Quote'},
+      {id: 2, field: 'symbol', headerName: 'Symbol'},
+      {id: 3, field: 'platform', headerName: 'Platform'},
+      {id: 4, field: 'numMarketPairs', headerName: 'Num Market Pairs'},
+      {id: 5, field: 'dateAdded', headerName: 'Date Added'},
+      {id: 6, field: 'lastUpdated', headerName: 'Last Updated'},
+      {id: 7, field: 'maxSupply', headerName: 'Max Supply'},
+      // {id: ,field: 'circulatingSupply', headerName: 'Circulating Supply'},
+      {id: 8, field: 'cmcRank', headerName: 'CMC Rank'},
+      {
+        id: 9,
+        field: 'selfReportedCirculatingSupply',
+        headerName: 'Self Reported Circulating Supply',
+      },
+      {id: 10, field: 'selfReportedMarketCap', headerName: 'Self Reported Market Cap'},
+      {id: 11, field: 'quote', headerName: 'Quote'},
     ];
 
     const rows =
       listings &&
       listings.map(prop => ({
         id: prop.id,
-        // tokenName: {
-        //   tokenName: prop.name,
-        //   tokenAddress: prop.platform.token_address,
-        // },
+        tokenAddress: prop.platform.token_address,
         name: prop.name,
         symbol: prop.symbol,
         platform: prop.platform.symbol,
         numMarketPairs: prop.num_market_pairs,
-        dateAdded: `${formatDate(prop.date_added)} ${formatTime(prop.date_added)}`,
-        lastUpdated: `${formatDate(prop.last_updated)} ${formatTime(prop.last_updated)}`,
-        maxSupply: `${formatNumber(prop.max_supply, 4)}`,
+        dateAdded: (
+          <MyTooltip label={formatDate(prop.date_added)} title={formatTime(prop.date_added)} />
+        ),
+        lastUpdated: (
+          <MyTooltip label={formatDate(prop.last_updated)} title={formatTime(prop.last_updated)} />
+        ),
+        maxSupply: (
+          <MyTooltip
+            label={formatNumber(prop.max_supply, 4)}
+            title={Number(prop.max_supply).toLocaleString()}
+          />
+        ),
         // circulatingSupply: prop.circulating_supply,
         cmcRank: prop.cmc_rank,
-        selfReportedCirculatingSupply: `${formatNumber(prop.self_reported_circulating_supply, 4)}`,
-        selfReportedMarketCap: `${formatNumber(prop.self_reported_market_cap, 4)}`,
-        quote: prop.quote.USD.price,
+        selfReportedCirculatingSupply: (
+          <MyTooltip
+            label={formatNumber(prop.self_reported_circulating_supply, 4)}
+            title={Number(prop.self_reported_circulating_supply).toLocaleString()}
+          />
+        ),
+        selfReportedMarketCap: (
+          <MyTooltip
+            label={formatNumber(prop.self_reported_market_cap, 4)}
+            title={Number(prop.self_reported_market_cap).toLocaleString()}
+          />
+        ),
+        quote: (
+          <MyTooltip label={prop.quote.USD.price} title={formatSmallNumber(prop.quote.USD.price)} />
+        ),
       }));
 
     return (
-      <div>
+      <>
         <Outlet />
+        <div style={{height: '80vh', width: '100%'}}>
+          <TableContainer component={Paper}>
+            <Table sx={{minWidth: 650}} size="small" aria-label="simple table">
+              <TableHead>
+                <StyledTableRow>
+                  {columns.map(column => {
+                    let align = 'right';
+                    if (column.headerName === 'Name') {
+                      align = 'center';
+                    }
 
-        <div style={{height: 800, width: '100%'}}>
-          <DataGrid rows={rows} columns={columns} pageSize={20} rowsPerPageOptions={[20]} />
+                    return (
+                      <StyledTableCell key={column.id} align={align}>
+                        {column.headerName}
+                      </StyledTableCell>
+                    );
+                  })}
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <StyledTableRow
+                    key={row.id}
+                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                  >
+                    <StyledTableCell component="th" scope="row" align="left">
+                      <Button
+                        color="primary"
+                        align="center"
+                        variant="contained"
+                        component={Link}
+                        to={`/token-address/${row.tokenAddress}`}
+                      >
+                        {row.name}
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.symbol}</StyledTableCell>
+                    <StyledTableCell align="right">{row.platform}</StyledTableCell>
+                    <StyledTableCell align="right">{row.numMarketPairs}</StyledTableCell>
+                    <StyledTableCell align="right">{row.dateAdded}</StyledTableCell>
+                    <StyledTableCell align="right">{row.lastUpdated}</StyledTableCell>
+                    <StyledTableCell align="right">{row.maxSupply}</StyledTableCell>
+                    <StyledTableCell align="right">{row.cmcRank}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.selfReportedCirculatingSupply}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.selfReportedMarketCap}</StyledTableCell>
+                    <StyledTableCell align="right">{row.quote}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
-        <table border="1" cellPadding="5">
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th>Symbol</th>
-              <th>Platform</th>
-              <th>Num Market Pairs</th>
-              <th>Date Added</th>
-              <th>Last Updated</th>
-              <th>Max Supply</th>
-              <th>Circulating Supply</th>
-              <th>CMC Rank</th>
-              <th>Self Reported Circulating Supply</th>
-              <th>Self Reported Market Cap</th>
-              <th>Quote</th>
-            </tr>
-            {listings &&
-              listings.map(prop => {
-                return (
-                  <tr key={prop.platform.token_address}>
-                    <td>
-                      <Link to={`/token-address/${prop.platform.token_address}`}>{prop.name}</Link>
-                    </td>
-                    <td>{prop.symbol}</td>
-                    <td>{prop.platform.symbol}</td>
-                    <td>{prop.num_market_pairs}</td>
-                    <td>
-                      {formatDate(prop.date_added)}&nbsp;
-                      <strong title={formatTime(prop.date_added)}>&#9716;</strong>
-                    </td>
-                    <td>
-                      {formatDate(prop.last_updated)}&nbsp;
-                      <strong title={formatTime(prop.last_updated)}>&#9716;</strong>
-                    </td>
-                    <td>{formatNumber(prop.max_supply, 4)}</td>
-                    <td>{prop.circulating_supply}</td>
-                    <td>{prop.cmc_rank}</td>
-                    <td>{formatNumber(prop.self_reported_circulating_supply, 4)}</td>
-                    <td>{formatNumber(prop.self_reported_market_cap, 4)}</td>
-                    <td>
-                      <span style={{whiteSpace: 'nowrap'}}>{prop.quote.USD.price}</span>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+      </>
     );
   }
 }
