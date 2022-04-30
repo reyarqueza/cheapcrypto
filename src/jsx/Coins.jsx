@@ -181,15 +181,19 @@ class Coins extends PureComponent {
     return (
       <>
         <Outlet />
-        <div style={{height: '80vh', width: '100%'}}>
-          <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} size="small" aria-label="simple table">
+        <Paper sx={{width: '95%', margin: 'auto', overflow: 'hidden'}}>
+          <TableContainer component={Paper} sx={{maxHeight: '75vh'}}>
+            <Table stickyHeader sx={{minWidth: 650}} size="small" aria-label="simple table">
               <TableHead>
                 <StyledTableRow>
                   {columns.map(column => {
-                    let align = 'right';
-                    if (column.headerName === 'Name') {
-                      align = 'center';
+                    let align = 'center';
+                    if (
+                      column.headerName === 'Symbol' ||
+                      column.headerName === 'CMC Rank' ||
+                      column.headerName === 'Quote'
+                    ) {
+                      align = 'right';
                     }
 
                     return (
@@ -218,23 +222,23 @@ class Coins extends PureComponent {
                       </Button>
                     </StyledTableCell>
                     <StyledTableCell align="right">{row.symbol}</StyledTableCell>
-                    <StyledTableCell align="right">{row.platform}</StyledTableCell>
-                    <StyledTableCell align="right">{row.numMarketPairs}</StyledTableCell>
+                    <StyledTableCell align="center">{row.platform}</StyledTableCell>
+                    <StyledTableCell align="center">{row.numMarketPairs}</StyledTableCell>
                     <StyledTableCell align="right">{row.dateAdded}</StyledTableCell>
                     <StyledTableCell align="right">{row.lastUpdated}</StyledTableCell>
-                    <StyledTableCell align="right">{row.maxSupply}</StyledTableCell>
+                    <StyledTableCell align="center">{row.maxSupply}</StyledTableCell>
                     <StyledTableCell align="right">{row.cmcRank}</StyledTableCell>
-                    <StyledTableCell align="right">
+                    <StyledTableCell align="center">
                       {row.selfReportedCirculatingSupply}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.selfReportedMarketCap}</StyledTableCell>
+                    <StyledTableCell align="center">{row.selfReportedMarketCap}</StyledTableCell>
                     <StyledTableCell align="right">{row.quote}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-        </div>
+        </Paper>
       </>
     );
   }
