@@ -181,7 +181,7 @@ class Coins extends PureComponent {
     return (
       <>
         <Outlet />
-        <Paper sx={{width: '95%', margin: 'auto', overflow: 'hidden'}}>
+        <Paper sx={{margin: '16px', overflow: 'hidden'}}>
           <TableContainer component={Paper} sx={{maxHeight: '75vh'}}>
             <Table stickyHeader sx={{minWidth: 650}} size="small" aria-label="simple table">
               <TableHead>

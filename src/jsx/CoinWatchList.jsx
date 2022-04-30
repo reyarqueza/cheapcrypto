@@ -6,13 +6,14 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
 export default function CoinWatchList(props) {
   // avoid SSR, sorry no isomorphic here.
   if (typeof process === 'object') {
-    return <div className="coin-watchlist"></div>;
+    return <div className="coin-watchlist" sx={{backgroundColor: 'primary.light'}}></div>;
   }
 
   const {user} = props;
@@ -29,16 +30,16 @@ export default function CoinWatchList(props) {
 
   if (isLoading) {
     return (
-      <div className="coin-watchlist">
+      <Card sx={{margin: '16px'}} className="coin-watchlist" variant="outlined">
         <Typography variant="h6" m={2} gutterBottom component="h6">
-          Your Watchlist
+          My Watchlist
         </Typography>
         <Box m={2}>
           <Stack p={2} direction="row" spacing={1}>
             <LinearProgress />
           </Stack>
         </Box>
-      </div>
+      </Card>
     );
   }
 
@@ -47,9 +48,9 @@ export default function CoinWatchList(props) {
   }
 
   return (
-    <div className="coin-watchlist">
+    <Card sx={{margin: '16px'}} className="coin-watchlist" variant="outlined">
       <Typography variant="h6" m={2} gutterBottom component="h6">
-        Your Watchlist
+        My Watchlist
       </Typography>
       <Box m={2}>
         <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
@@ -64,11 +65,12 @@ export default function CoinWatchList(props) {
                   avatar={<Avatar alt={item.name} src={item.logo} />}
                   label={item.name}
                   sx={{margin: '4px'}}
+                  variant="outlined"
                 />
               );
             })}
         </Stack>
       </Box>
-    </div>
+    </Card>
   );
 }
