@@ -48,29 +48,31 @@ export default function CoinWatchList(props) {
   }
 
   return (
-    <Card sx={{margin: '16px'}} className="coin-watchlist" variant="outlined">
+    <>
       <Typography variant="h6" m={2} gutterBottom component="h6">
         My Watchlist
       </Typography>
-      <Box m={2}>
-        <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
-          {data &&
-            data.map(item => {
-              return (
-                <Chip
-                  key={item.id}
-                  component={Link}
-                  to={`/token-address/${item.platform.token_address}`}
-                  clickable
-                  avatar={<Avatar alt={item.name} src={item.logo} />}
-                  label={item.name}
-                  sx={{margin: '4px'}}
-                  variant="outlined"
-                />
-              );
-            })}
-        </Stack>
-      </Box>
-    </Card>
+      <Card sx={{margin: '16px'}} className="coin-watchlist" variant="outlined">
+        <Box m={2}>
+          <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
+            {data &&
+              data.map(item => {
+                return (
+                  <Chip
+                    key={item.id}
+                    component={Link}
+                    to={`/token-address/${item.platform.token_address}`}
+                    clickable
+                    avatar={<Avatar alt={item.name} src={item.logo} />}
+                    label={item.name}
+                    sx={{margin: '4px'}}
+                    variant="outlined"
+                  />
+                );
+              })}
+          </Stack>
+        </Box>
+      </Card>
+    </>
   );
 }

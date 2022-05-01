@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import MyTooltip from './MyTooltip.jsx';
 
 function formatDate(dateStr) {
@@ -122,20 +123,20 @@ class Coins extends PureComponent {
         headerName: 'Name',
       },
       {id: 2, field: 'symbol', headerName: 'Symbol'},
-      {id: 3, field: 'platform', headerName: 'Platform'},
-      {id: 4, field: 'numMarketPairs', headerName: 'Num Market Pairs'},
-      {id: 5, field: 'dateAdded', headerName: 'Date Added'},
-      {id: 6, field: 'lastUpdated', headerName: 'Last Updated'},
-      {id: 7, field: 'maxSupply', headerName: 'Max Supply'},
-      // {id: ,field: 'circulatingSupply', headerName: 'Circulating Supply'},
-      {id: 8, field: 'cmcRank', headerName: 'CMC Rank'},
+      {id: 3, field: 'quote', headerName: 'Quote'},
+      {id: 4, field: 'platform', headerName: 'Platform'},
+      {id: 5, field: 'maxSupply', headerName: 'Max Supply'},
       {
-        id: 9,
+        id: 6,
         field: 'selfReportedCirculatingSupply',
         headerName: 'Self Reported Circulating Supply',
       },
-      {id: 10, field: 'selfReportedMarketCap', headerName: 'Self Reported Market Cap'},
-      {id: 11, field: 'quote', headerName: 'Quote'},
+      {id: 7, field: 'selfReportedMarketCap', headerName: 'Self Reported Market Cap'},
+      {id: 8, field: 'cmcRank', headerName: 'CMC Rank'},
+      {id: 9, field: 'numMarketPairs', headerName: 'Num Market Pairs'},
+      {id: 10, field: 'dateAdded', headerName: 'Date Added'},
+      {id: 11, field: 'lastUpdated', headerName: 'Last Updated'},
+      // {id: ,field: 'circulatingSupply', headerName: 'Circulating Supply'},
     ];
 
     const rows =
@@ -181,9 +182,12 @@ class Coins extends PureComponent {
     return (
       <>
         <Outlet />
+        <Typography variant="h6" m={2} gutterBottom component="h6">
+          Crypto Listings 1e-23 to 1e-13
+        </Typography>
         <Paper sx={{margin: '16px', overflow: 'hidden'}}>
-          <TableContainer component={Paper} sx={{maxHeight: '75vh'}}>
-            <Table stickyHeader sx={{minWidth: 650}} size="small" aria-label="simple table">
+          <TableContainer component={Paper} sx={{maxHeight: '65vh'}}>
+            <Table stickyHeader sx={{minWidth: 1880}} size="small" aria-label="simple table">
               <TableHead>
                 <StyledTableRow>
                   {columns.map(column => {
@@ -222,17 +226,17 @@ class Coins extends PureComponent {
                       </Button>
                     </StyledTableCell>
                     <StyledTableCell align="right">{row.symbol}</StyledTableCell>
+                    <StyledTableCell align="right">{row.quote}</StyledTableCell>
                     <StyledTableCell align="center">{row.platform}</StyledTableCell>
-                    <StyledTableCell align="center">{row.numMarketPairs}</StyledTableCell>
-                    <StyledTableCell align="right">{row.dateAdded}</StyledTableCell>
-                    <StyledTableCell align="right">{row.lastUpdated}</StyledTableCell>
                     <StyledTableCell align="center">{row.maxSupply}</StyledTableCell>
-                    <StyledTableCell align="right">{row.cmcRank}</StyledTableCell>
                     <StyledTableCell align="center">
                       {row.selfReportedCirculatingSupply}
                     </StyledTableCell>
                     <StyledTableCell align="center">{row.selfReportedMarketCap}</StyledTableCell>
-                    <StyledTableCell align="right">{row.quote}</StyledTableCell>
+                    <StyledTableCell align="right">{row.cmcRank}</StyledTableCell>
+                    <StyledTableCell align="center">{row.numMarketPairs}</StyledTableCell>
+                    <StyledTableCell align="right">{row.dateAdded}</StyledTableCell>
+                    <StyledTableCell align="right">{row.lastUpdated}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
