@@ -4,6 +4,11 @@ import {useQuery} from 'react-query';
 import {print} from 'graphql';
 import {request, gql} from 'graphql-request';
 import AddRemove from './AddRemove.jsx';
+import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 
 export default function Coin() {
   const params = useParams();
@@ -63,21 +68,24 @@ export default function Coin() {
   const {platform_id, platform_name, platform_symbol, token_address} = platform;
 
   return (
-    <div>
-      <AddRemove collectionKey={'coins'} collectionValue={id} />
-      <hr />
-      <br />
-      {id}
-      <br />
-      {name}
-      <br />
-      {symbol}
-      <br />
-      <img src={logo} />
-      <br />
-      {description}
-      <br />
-      {subreddit}
+    <>
+      <Stack m={2} direction="row" alignItems="center">
+        <Avatar src={logo} sx={{width:'75px',height:'75px'}} />
+        <Typography variant="h2" m={2} gutterBottom component="h1">
+          {name}{' '}({symbol})
+        </Typography>
+      </Stack>
+      <Box sx={{padding: '0 16px'}}>
+        <AddRemove collectionKey={'coins'} collectionValue={id} />
+      </Box>
+
+      <Card sx={{margin: '16px', padding: '16px'}} className="coin-watchlist" variant="outlined">
+      <Typography variant="body1" gutterBottom>
+
+        {description}
+      </Typography>
+
+      {/* {subreddit} */}
       <br />
       <a href={website} target="_blank">
         {website}
@@ -137,7 +145,7 @@ export default function Coin() {
       {platform_symbol}
       <br />
       {token_address}
-      <br />
-    </div>
+      </Card>
+    </>
   );
 }
