@@ -31,7 +31,6 @@ export default function AddRemove(props) {
     },
     {
       onSuccess: data => {
-        console.log('onSuccess data', data);
         queryClient.setQueryData(collectionKey, data);
         queryClient.invalidateQueries(collectionKey);
       },

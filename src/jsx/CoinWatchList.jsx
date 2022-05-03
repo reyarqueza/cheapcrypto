@@ -47,6 +47,10 @@ export default function CoinWatchList(props) {
     return <span>Error: {error.message}</span>;
   }
 
+  if (data && data.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <Typography variant="h6" m={2} gutterBottom component="h6">
