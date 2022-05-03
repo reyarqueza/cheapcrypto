@@ -3,9 +3,11 @@ query CoinMeta($contractAddress: String!) {
     id
     name
     symbol
+    category
     logo
     description
     subreddit
+    notice
     urls {
       website
       twitter

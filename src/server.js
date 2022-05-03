@@ -83,7 +83,7 @@ function App(props) {
 
 function init(req, res) {
   const params = new URLSearchParams({
-    minQuote: '1e-23',
+    minQuote: '1e-24',
     maxQuote: '1e-13',
   });
   const urlString = `http://localhost:3000/get-coin-list?${params.toString()}`;
