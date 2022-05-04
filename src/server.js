@@ -35,7 +35,7 @@ import {hostInside} from './host';
 
 const app = express();
 const cache = apicache.middleware;
-const port = 3000;
+const port = process.env.NODE_ENV === 'production' ? 80 : 3000;
 
 const typesArray = loadFilesSync(join(__dirname, './graphql'), {extensions: ['graphqls']});
 const mergedSchemas = mergeTypeDefs(typesArray);
