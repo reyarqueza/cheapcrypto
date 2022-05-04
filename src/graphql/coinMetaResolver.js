@@ -1,8 +1,9 @@
 import fetch from 'cross-fetch';
+import host from '../host';
 
 export async function fetchCoinMeta({contractAddress}) {
   const params = new URLSearchParams({contractAddress});
-  const url = `http://localhost:3000/get-coin-meta?${params.toString()}`;
+  const url = `${host()}/get-coin-meta?${params.toString()}`;
 
   try {
     const response = await fetch(url);
