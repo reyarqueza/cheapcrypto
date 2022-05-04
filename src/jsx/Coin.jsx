@@ -37,7 +37,7 @@ import Alert from '@mui/material/Alert';
 import Container from '@mui/material/Container';
 import MyTooltip from './MyTooltip.jsx';
 import {formatNumber, formatSmallNumber, formatTime, formatDate} from '../data/utils';
-import host from '../host';
+import {hostOutside} from '../host';
 
 export default function Coin() {
   const params = useParams();
@@ -46,7 +46,7 @@ export default function Coin() {
   // avoid SSR, sorry no isomorphic here.
   if (typeof process !== 'object') {
     const coinId = params.coinId;
-    const endpoint = `${host()}/graphql`;
+    const endpoint = `${hostOutside()}/graphql`;
     const query = gql`
       ${print(require('../graphql/coinMeta.graphql'))}
     `;

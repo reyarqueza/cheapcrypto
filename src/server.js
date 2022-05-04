@@ -31,7 +31,7 @@ import wrapper from './wrapper';
 import {getCoinInfo, getCoinList, signIn, updateUserCollection, getUserCollection} from './data';
 
 import {UserContext} from './context';
-import host from './host';
+import {hostInside} from './host';
 
 const app = express();
 const cache = apicache.middleware;
@@ -87,7 +87,7 @@ function init(req, res) {
     minQuote: '1e-24',
     maxQuote: '1e-13',
   });
-  const urlString = `${host()}/get-coin-list?${params.toString()}`;
+  const urlString = `${hostInside()}/get-coin-list?${params.toString()}`;
 
   fetch(urlString)
     .then(response => response.json())
@@ -166,5 +166,5 @@ app.get('/get-user-collection', async (req, res) => {
 
 // start express
 app.listen(port, () => {
-  console.log(`Open your browser at ${host()}`);
+  console.log(`Open your browser at ${hostInside()}`);
 });
