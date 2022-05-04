@@ -1,4 +1,6 @@
 import express from 'express';
+import https from 'https';
+import fs from 'fs';
 import {graphqlHTTP} from 'express-graphql';
 import {buildSchema} from 'graphql';
 
@@ -35,11 +37,11 @@ import {hostInside} from './host';
 
 const app = express();
 const cache = apicache.middleware;
-const port = process.env.NODE_ENV === 'production' ? 80 : 3000;
-
 const typesArray = loadFilesSync(join(__dirname, './graphql'), {extensions: ['graphqls']});
 const mergedSchemas = mergeTypeDefs(typesArray);
 const mergedSchemaString = print(mergedSchemas);
+
+let httpsServer;
 
 app.use(
   '/graphql',
@@ -165,6 +167,27 @@ app.get('/get-user-collection', async (req, res) => {
 });
 
 // start express
-app.listen(port, () => {
+const webConsole = () => {
   console.log(`Open your browser at ${hostInside()}`);
-});
+};
+
+if (process.env.NODE_ENV === 'production') {
+  httpsServer = https.createServer(
+    {
+      key: fs.readFileSync('/etc/letsencrypt/live/cheapcryto.app/privkey.pem', 'utf8'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/cheapcryto.app/fullchain.pem', 'utf8'),
+    },
+    app
+  );
+  httpsServer.listen(443, webConsole);
+} else {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  httpsServer = https.createServer(
+    {
+      key: fs.readFileSync(__dirname + '/../localhost/localhost.key', 'utf8'),
+      cert: fs.readFileSync(__dirname + '/../localhost/localhost.pem', 'utf8'),
+    },
+    app
+  );
+  httpsServer.listen(3000, webConsole);
+}
