@@ -174,8 +174,8 @@ const webConsole = () => {
 if (process.env.NODE_ENV === 'production') {
   httpsServer = https.createServer(
     {
-      key: fs.readFileSync('/etc/letsencrypt/live/cheapcryto.app/privkey.pem', 'utf8'),
-      cert: fs.readFileSync('/etc/letsencrypt/live/cheapcryto.app/fullchain.pem', 'utf8'),
+      key: fs.readFileSync('/etc/letsencrypt/live/cheapcrypto.app/privkey.pem', 'utf8'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/cheapcrypto.app/fullchain.pem', 'utf8'),
     },
     app
   );
