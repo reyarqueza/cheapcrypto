@@ -52,6 +52,10 @@ reyarqueza@rey-mac : ~/cheapcrypto
 $ npm run build
 ```
 
+### Gotchas in Prod the cap solution
+
+- https://stackoverflow.com/questions/60372618/nodejs-listen-eacces-permission-denied-0-0-0-080
+
 ## The Secret (Not) Sauce
 
 - ReactDOMServer - https://reactjs.org/docs/react-dom-server.html
