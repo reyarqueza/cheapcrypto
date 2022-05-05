@@ -115,7 +115,7 @@ class Coins extends PureComponent {
     return (
       <>
         <Outlet />
-        <Typography variant="h6" m={2} gutterBottom component="h6">
+        <Typography variant="h6" m={2} gutterBottom component="h2">
           Crypto Listings 1e-24 to 1e-14
         </Typography>
         <Paper sx={{margin: '16px', overflow: 'hidden'}}>
