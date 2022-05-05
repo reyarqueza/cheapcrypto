@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Tooltip, Button, ClickAwayListener } from '@mui/material';
+import {Tooltip, Button, ClickAwayListener} from '@mui/material';
 
 export default function MyTooltip({label, title}) {
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function MyTooltip({label, title}) {
           disableHoverListener
           disableTouchListener
           title={title}
-          placement="right"
+          placement="top"
           arrow
         >
           <Button onClick={handleTooltipOpen}>{label}</Button>

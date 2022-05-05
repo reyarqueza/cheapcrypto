@@ -214,10 +214,9 @@ export default function Coin() {
                       key={url}
                       href={url}
                       target="_blank"
-                      sx={{margin: '0 10px'}}
                       variant="outlined"
                       size="small"
-                      sx={{backgroundColor: '#fff', marginLeft: '20px'}}
+                      sx={{backgroundColor: '#fff', margin: '0 10px 0 20px'}}
                     >
                       Open
                     </Button>
