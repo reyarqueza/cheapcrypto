@@ -43,6 +43,22 @@ reyarqueza@rey-mac : ~/cheapcrypto
 $ npm run sass-watch
 ```
 
+## Bundle Analyzer
+
+1. build the stats.json file
+
+```bash
+npx webpack --config ./webpack.config.prod.js --json > stats.json
+```
+
+2. run the analyzer server
+
+```bash
+npx webpack-bundle-analyzer stats.json
+```
+
+3. Webpack Bundle Analyzer is started at http://127.0.0.1:8888
+
 ## Production
 
 To create a minified production build:

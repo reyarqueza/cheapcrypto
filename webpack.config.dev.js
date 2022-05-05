@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // call dotenv and it will return an Object with a parsed key
 const env = dotenv.config().parsed;
@@ -34,7 +35,7 @@ const config = {
       },
     ],
   },
-  plugins: [new webpack.DefinePlugin(envKeys)],
+  plugins: [new webpack.DefinePlugin(envKeys), new BundleAnalyzerPlugin()],
 };
 
 module.exports = config;

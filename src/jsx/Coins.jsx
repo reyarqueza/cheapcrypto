@@ -1,18 +1,23 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Link, Outlet} from 'react-router-dom';
-import {styled} from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, {tableCellClasses} from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {tableCellClasses} from '@mui/material/TableCell';
 import MyTooltip from './MyTooltip.jsx';
 import {formatNumber, formatSmallNumber, formatTime, formatDate} from '../data/utils';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Typography,
+} from '@mui/material';
+
+import {styled} from '@mui/material/styles';
 
 function mapStateToProps(state) {
   return {

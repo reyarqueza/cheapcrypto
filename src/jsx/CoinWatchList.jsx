@@ -1,14 +1,7 @@
 import React from 'react';
 import {useQuery} from 'react-query';
 import {Link} from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import LinearProgress from '@mui/material/LinearProgress';
-import Typography from '@mui/material/Typography';
+import { Avatar, Chip, Stack, Paper, Box, Card, LinearProgress, Typography } from '@mui/material';
 
 export default function CoinWatchList(props) {
   // avoid SSR, sorry no isomorphic here.

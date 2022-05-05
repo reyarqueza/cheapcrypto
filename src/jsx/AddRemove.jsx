@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {useQueryClient, useQuery, useMutation} from 'react-query';
 import fetch from 'cross-fetch';
 import {UserContext} from '../context';
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 
 export default function AddRemove(props) {
   const {collectionKey, collectionValue} = props;

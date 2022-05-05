@@ -4,19 +4,6 @@ import {useQuery} from 'react-query';
 import {print} from 'graphql';
 import {request, gql} from 'graphql-request';
 import AddRemove from './AddRemove.jsx';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import LinearProgress from '@mui/material/LinearProgress';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Button from '@mui/material/Button';
 import WebIcon from '@mui/icons-material/Web';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import MessageIcon from '@mui/icons-material/Message';
@@ -27,17 +14,33 @@ import RedditIcon from '@mui/icons-material/Reddit';
 import ArticleIcon from '@mui/icons-material/Article';
 import CodeIcon from '@mui/icons-material/Code';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Alert from '@mui/material/Alert';
-import Container from '@mui/material/Container';
 import MyTooltip from './MyTooltip.jsx';
 import {formatNumber, formatSmallNumber, formatTime, formatDate} from '../data/utils';
 import {hostOutside} from '../host';
+
+import {
+  Typography,
+  Avatar,
+  Stack,
+  Card,
+  Box,
+  Paper,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Alert,
+  Container,
+} from '@mui/material';
 
 export default function Coin() {
   const params = useParams();

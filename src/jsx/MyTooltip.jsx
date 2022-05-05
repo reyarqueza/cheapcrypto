@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
+import { Tooltip, Button, ClickAwayListener } from '@mui/material';
 
 export default function MyTooltip({label, title}) {
   const [open, setOpen] = useState(false);

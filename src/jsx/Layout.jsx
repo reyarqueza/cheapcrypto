@@ -1,11 +1,11 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 import CoinWatchList from './CoinWatchList.jsx';
 import UserAppBar from './UserAppBar.jsx';
 import {UserContext} from '../context';
+
+import { Typography, Box } from '@mui/material';
 
 export default function Layout() {
   return (
