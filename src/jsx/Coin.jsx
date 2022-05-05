@@ -17,7 +17,6 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import MyTooltip from './MyTooltip.jsx';
 import {formatNumber, formatSmallNumber, formatTime, formatDate} from '../data/utils';
 import {hostOutside} from '../host';
-
 import {
   Typography,
   Avatar,
@@ -40,10 +39,12 @@ import {
   TableRow,
   Alert,
   Container,
+  useMediaQuery,
 } from '@mui/material';
 
 export default function Coin() {
   const params = useParams();
+  const isDesktop = useMediaQuery('(min-width:620px)');
   let status, isLoading, error, data;
 
   // avoid SSR, sorry no isomorphic here.
@@ -161,29 +162,52 @@ export default function Coin() {
     },
   }));
 
+  let backgroundColor = '#fff';
+
   return (
     <div style={{maxWidth: '1280px'}} className="coinInfo">
       <Stack m={2} direction="row" alignItems="center">
         <Avatar src={logo} sx={{width: '75px', height: '75px'}} />
-        <Typography variant="h2" m={2} gutterBottom component="h1">
+        <Typography variant="h6" m={2} gutterBottom component="h1">
           {name} ({symbol})
         </Typography>
       </Stack>
-      {notice ? <Alert severity="error">{notice}</Alert> : null}
-      <Stack direction="row" sx={{padding: '20px'}}>
-        <Paper>
-          <Box sx={{padding: '16px', minWidth: '220px'}}>
-            <AddRemove collectionKey={'coins'} collectionValue={id} />
-          </Box>
+      <Box sx={{minWidth: '220px', textAlign: 'center'}}>
+        <AddRemove collectionKey={'coins'} collectionValue={id} />
+      </Box>
+      {notice ? (
+        <Alert severity="error" sx={{marginTop: '20px', overflowX: 'scroll'}}>
+          {notice}
+        </Alert>
+      ) : null}
+      <Typography
+        sx={{fontSize: '1.1rem', lineHeight: '1.8', padding: '20px'}}
+        variant="body1"
+        gutterBottom
+      >
+        {description}
+      </Typography>
+      <Stack direction={isDesktop ? 'row' : 'column'} sx={{padding: '0 20px 20px 20px'}}>
+        <Container>
+          <Typography variant="h6" m={2} gutterBottom component="h2">
+            External Links
+          </Typography>
           <List>
             {links.map((link, index) => {
               if (link.urls.length === 0) {
                 return null;
               }
-
+              backgroundColor =
+                backgroundColor === 'rgba(0, 0, 0, 0.04)' ? '#fff' : 'rgba(0, 0, 0, 0.04)';
+              console.log('backgroundColor', backgroundColor);
               return (
-                <ListItem key={index}>
-                  <ListItemIcon>{link.icon(link.name)}</ListItemIcon>
+                <ListItem
+                  key={index}
+                  sx={{
+                    backgroundColor,
+                  }}
+                >
+                  <ListItemIcon sx={{minWidth: '36px'}}>{link.icon(link.name)}</ListItemIcon>
                   <ListItemText primary={link && link.name && link.name.replaceAll('_', ' ')} />
                   {link.urls.map(url => (
                     <Button
@@ -193,6 +217,7 @@ export default function Coin() {
                       sx={{margin: '0 10px'}}
                       variant="outlined"
                       size="small"
+                      sx={{backgroundColor: '#fff', marginLeft: '20px'}}
                     >
                       Open
                     </Button>
@@ -201,33 +226,30 @@ export default function Coin() {
               );
             })}
           </List>
-        </Paper>
-
-        <Typography
-          sx={{fontSize: '1.1rem', lineHeight: '1.8', padding: '0 20px 20px 20px'}}
-          variant="body1"
-          gutterBottom
-        >
-          {description}
-        </Typography>
-        <TableContainer>
-          <Table>
-            <TableBody>
-              {miscData.map((item, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell align="left">
-                      <strong style={{textTransform: 'capitalize'}}>
-                        {Object.keys(item)[0].replaceAll('_', ' ')}
-                      </strong>
-                    </TableCell>
-                    <TableCell align="left">{item[Object.keys(item)[0]]}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        </Container>
+        <Container>
+          <Typography variant="h6" m={2} gutterBottom component="h2">
+            Misc Information
+          </Typography>
+          <TableContainer sx={{margin: '0 20px 20px 20px'}}>
+            <Table>
+              <TableBody>
+                {miscData.map((item, index) => {
+                  return (
+                    <TableRow key={index}>
+                      <TableCell align="left">
+                        <strong style={{textTransform: 'capitalize'}}>
+                          {Object.keys(item)[0].replaceAll('_', ' ')}
+                        </strong>
+                      </TableCell>
+                      <TableCell align="center">{item[Object.keys(item)[0]]}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
       </Stack>
     </div>
   );
