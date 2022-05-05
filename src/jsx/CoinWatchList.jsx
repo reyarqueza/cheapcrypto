@@ -1,7 +1,7 @@
 import React from 'react';
 import {useQuery} from 'react-query';
 import {Link} from 'react-router-dom';
-import { Avatar, Chip, Stack, Paper, Box, Card, LinearProgress, Typography } from '@mui/material';
+import {Avatar, Chip, Stack, Paper, Box, Card, LinearProgress, Typography} from '@mui/material';
 
 export default function CoinWatchList(props) {
   // avoid SSR, sorry no isomorphic here.
@@ -49,13 +49,14 @@ export default function CoinWatchList(props) {
       <Typography variant="h6" m={2} gutterBottom component="h6">
         My Watchlist
       </Typography>
-      <Card sx={{margin: '16px'}} className="coin-watchlist" variant="outlined">
-        <Box m={2}>
+      <Box m={2}>
+        <Card m={2} className="coin-watchlist" variant="outlined">
           <Stack direction="row" sx={{flexWrap: 'wrap', padding: '4px'}}>
             {data &&
               data.map(item => {
                 return (
                   <Chip
+                    color="info"
                     key={item.id}
                     component={Link}
                     to={`/token-address/${item.platform.token_address}`}
@@ -68,8 +69,8 @@ export default function CoinWatchList(props) {
                 );
               })}
           </Stack>
-        </Box>
-      </Card>
+        </Card>
+      </Box>
     </>
   );
 }

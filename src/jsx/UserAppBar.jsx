@@ -4,26 +4,25 @@ import {Link as RouterLink} from 'react-router-dom';
 
 import SignIn from './SignIn.jsx';
 
-import { AppBar, Box, Toolbar, Typography, IconButton, Link } from '@mui/material';
+import {AppBar, Box, Toolbar, Typography, IconButton, Link} from '@mui/material';
 
 export default function UserAppBar() {
   return (
     <Box sx={{flexGrow: 1}}>
-      <AppBar position="static">
+      <AppBar position="static" color="transparent">
         <Toolbar>
           <IconButton
             component={RouterLink}
             to="/"
-            size="large"
+            size="small"
             edge="start"
             color="inherit"
-            aria-label="menu"
-            sx={{mr: 2}}
+            aria-label="Home"
           >
             <HomeIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-            <Link color="#fff" component={RouterLink} to="/">
+            <Link color="primary" component={RouterLink} to="/">
               cheapcrypto.app
             </Link>
           </Typography>
