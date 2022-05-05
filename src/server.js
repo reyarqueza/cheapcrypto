@@ -1,6 +1,7 @@
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
+import compression from 'compression';
 import {graphqlHTTP} from 'express-graphql';
 import {buildSchema} from 'graphql';
 
@@ -104,6 +105,9 @@ function init(req, res) {
       console.log(error);
     });
 }
+
+// compress all responses
+app.use(compression());
 
 // static files
 app.use(express.static('public'));
