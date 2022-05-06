@@ -19,7 +19,7 @@ export default function (content, preloadedState) {
     <script defer>
     window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
     </script>
-    <script defer src="/js/bundle.js?v=0.1.5"></script>
+    <script defer src="/js/bundle.js?v=0.1.6"></script>
   </head>
   <body>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
