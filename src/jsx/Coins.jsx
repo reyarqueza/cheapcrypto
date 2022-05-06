@@ -15,6 +15,8 @@ import {
   Paper,
   Button,
   Typography,
+  Stack,
+  Alert,
 } from '@mui/material';
 
 import {styled} from '@mui/material/styles';
@@ -115,9 +117,18 @@ class Coins extends PureComponent {
     return (
       <>
         <Outlet />
-        <Typography variant="h6" m={2} gutterBottom component="h2">
-          Crypto Listings 1e-24 to 1e-14
-        </Typography>
+
+        <Alert severity="info" icon={false} sx={{padding: '0 0 0 32px'}}>
+          <Typography component="h2">
+            <Stack direction="row" alignItems="center">
+              <strong style={{fontSize: '0.875rem', lineHeight: '1.75'}}>QUOTES FROM </strong>
+              <MyTooltip sx={{display: 'inline'}} label={1e-24} title={formatSmallNumber(1e-24)} />
+              <strong style={{fontSize: '0.875rem', lineHeight: '1.75'}}>TO</strong>
+              <MyTooltip label={1e-14} title={formatSmallNumber(1e-14)} />
+            </Stack>
+          </Typography>
+        </Alert>
+
         <Paper sx={{margin: '16px', overflow: 'hidden'}}>
           <TableContainer component={Paper} sx={{maxHeight: '65vh'}}>
             <Table stickyHeader sx={{minWidth: 1880}} size="small" aria-label="simple table">
