@@ -1,1 +1,20 @@
-@use "_reset";
+@use '_reset';
+
+@font-face {
+  font-family: 'PlusJakartaSans';
+  src: url('/fonts/PlusJakartaSans-ExtraBold.ttf');
+}
+
+h1 {
+  &.MuiTypography-root {
+    font-family: 'PlusJakartaSans';
+    // font-size: clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem);
+    font-size: clamp(2rem, 3.5vw, 4vw);
+    line-height: clamp(3rem, 4.5vw, 5.5vw);
+    font-weight: 800;
+
+    strong {
+      color: #007fff;
+    }
+  }
+}

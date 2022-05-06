@@ -19,14 +19,13 @@ export default function UserAppBar() {
             color="inherit"
             aria-label="Home"
           >
-            <HomeIcon />
+            <HomeIcon sx={{color: '#007fff'}} />
           </IconButton>
           <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-            <Link color="primary" component={RouterLink} to="/">
+            <Link color="#007fff" sx={{textDecoration: 'none'}} component={RouterLink} to="/">
               cheapcrypto.app
             </Link>
           </Typography>
-          {/* <Button color="inherit">Login</Button> */}
           <SignIn />
         </Toolbar>
       </AppBar>

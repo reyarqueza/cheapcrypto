@@ -15,10 +15,11 @@ export default function Layout() {
           if (user && user.user && Object.keys(user.user).length === 0) {
             return (
               <div className="coin-watchlist">
-                <Box sx={{width: '40vw', margin: '20px auto', textAlign: 'center'}}>
+                <Box sx={{width: '70vw', margin: '5vw auto', textAlign: 'center'}}>
                   <Typography variant="h5" component="h1" gutterBottom>
-                    Browse <strong>cheap</strong> cryptocurrency and{' '}
-                    <strong>add them to your watchlist.</strong>
+                    Browse <strong>cheap cryptocurrency</strong> and <strong>add</strong> them
+                    <strong> to </strong>
+                    your <strong>watchlist.</strong>
                   </Typography>
                 </Box>
               </div>
