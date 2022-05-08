@@ -90,6 +90,7 @@ export default function Coin() {
     is_hidden,
     self_reported_circulating_supply,
     self_reported_market_cap,
+    quote,
   } = data;
 
   const {platform_id, platform_name, platform_symbol, token_address} = platform;
@@ -99,6 +100,7 @@ export default function Coin() {
       if (
         !(
           key === 'urls' ||
+          key === 'quote' ||
           key === 'platform' ||
           key === 'notice' ||
           key === 'description' ||
@@ -123,6 +125,24 @@ export default function Coin() {
         } else {
           return {[key]: value};
         }
+      }
+    })
+    .filter(item => {
+      const itemKey = item && Object.keys(item)[0];
+      const itemValue = item && item[Object.keys(item)[0]];
+      if (itemValue) {
+        return item;
+      }
+    });
+
+  const quoteData = Object.entries(quote)
+    .map(([key, value]) => {
+      if (key.indexOf('last_updated') > -1 && value) {
+        return {[key]: <MyTooltip label={formatDate(value)} title={formatTime(value)} />};
+      } else {
+        return {
+          [key]: <MyTooltip title={formatSmallNumber(Number(value), 4)} label={value} />,
+        };
       }
     })
     .filter(item => {
@@ -172,8 +192,18 @@ export default function Coin() {
           {name} ({symbol})
         </Typography>
       </Stack>
-      <Box sx={{minWidth: '220px', textAlign: 'center'}}>
-        <AddRemove collectionKey={'coins'} collectionValue={id} />
+      <Box sx={{minWidth: '220px', textAlign: 'left', paddingLeft: '20px'}}>
+        <Stack direction="row" alignItems="center">
+          <AddRemove collectionKey={'coins'} collectionValue={id} />
+          {quote && quote.price ? (
+            <>
+              <Typography m={2} sx={{marginRight: '0'}}>
+                <strong>QUOTE :</strong>{' '}
+              </Typography>
+              <MyTooltip title={formatSmallNumber(Number(quote.price), 4)} label={quote.price} />
+            </>
+          ) : null}
+        </Stack>
       </Box>
       {notice ? (
         <Alert severity="error" sx={{marginTop: '20px', overflowX: 'scroll'}}>
@@ -187,7 +217,8 @@ export default function Coin() {
       >
         {description}
       </Typography>
-      <Stack direction={isDesktop ? 'row' : 'column'} sx={{padding: '0 20px 20px 20px'}}>
+
+      <Stack direction={isDesktop ? 'row' : 'column'} sx={{padding: '0 20px 20px 0'}}>
         <Container>
           <Typography variant="h6" m={2} gutterBottom component="h2">
             External Links
@@ -250,6 +281,30 @@ export default function Coin() {
           </TableContainer>
         </Container>
       </Stack>
+
+      <Container>
+        <Typography variant="h6" m={2} gutterBottom component="h2">
+          Quote Information
+        </Typography>
+        <TableContainer sx={{margin: '0 20px 20px 0'}}>
+          <Table>
+            <TableBody>
+              {quoteData.map((item, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell align="left">
+                      <strong style={{textTransform: 'capitalize'}}>
+                        {Object.keys(item)[0].replaceAll('_', ' ')}
+                      </strong>
+                    </TableCell>
+                    <TableCell align="center">{item[Object.keys(item)[0]]}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </div>
   );
 }

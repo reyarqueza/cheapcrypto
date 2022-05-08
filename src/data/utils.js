@@ -12,7 +12,7 @@ export function formatSmallNumber(num) {
   let firstPart;
   let secondPart;
 
-  if (num > 1) {
+  if (Math.abs(num) > 1) {
     return num;
   }
 
