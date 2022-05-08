@@ -30,12 +30,36 @@ export function getCoinList(
     })
       .then(response => response.json())
       .then(json => {
+        const quotes = json.data.map(item => ({id: item.id, quote: item.quote.USD}));
+        updateQuotes({quotes});
         resolve(json.data);
       })
       .catch(error => {
         reject(error);
       });
   });
+}
+
+export async function updateQuotes({quotes}) {
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const quotesCollection = database.collection('quotes');
+
+    const result = quotes.map(async quote => {
+      try {
+        const result = await quotesCollection.replaceOne({id: quote.id}, quote, {upsert: true});
+        return result;
+      } catch (e) {
+        return {error: e};
+      }
+    });
+
+    return JSON.stringify(result);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export function getCoinInfo(contractAddress) {
