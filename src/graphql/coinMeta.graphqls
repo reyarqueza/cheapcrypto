@@ -25,6 +25,7 @@ type CoinInfo {
   contract_address: [ContractAddress]
   platform: Platform
   urls: Urls
+  quote: Quote
 }
 
 type ContractAddress {
@@ -51,4 +52,20 @@ type Urls {
   message_board: [String]
   twitter: [String]
   website: [String]
+}
+
+type Quote {
+  price: String
+  volume_24h: Float
+  volume_change_24h: Float
+  percent_change_1h: Float
+  percent_change_24h: Float
+  percent_change_7d: Float
+  percent_change_30d: Float
+  percent_change_60d: Float
+  percent_change_90d: Float
+  market_cap: Float
+  market_cap_dominance: Float
+  fully_diluted_market_cap: Float
+  last_updated: String
 }

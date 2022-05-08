@@ -6,13 +6,15 @@ Use the GraphiQL app on http://localhost:3000/graphql
 
 ```
 query CoinMeta($contractAddress: String!) {
-  CoinMeta(contractAddress: $contractAddress) {
+  coinMeta(contractAddress: $contractAddress) {
     id
     name
     symbol
+    category
     logo
     description
     subreddit
+    notice
     urls {
       website
       twitter
@@ -36,6 +38,21 @@ query CoinMeta($contractAddress: String!) {
     is_hidden
     self_reported_circulating_supply
     self_reported_market_cap
+    quote {
+      price
+      volume_24h
+      volume_change_24h
+      percent_change_1h
+      percent_change_24h
+      percent_change_7d
+      percent_change_30d
+      percent_change_60d
+      percent_change_90d
+      market_cap
+      market_cap_dominance
+      fully_diluted_market_cap
+      last_updated
+    }
   }
 }
 ```

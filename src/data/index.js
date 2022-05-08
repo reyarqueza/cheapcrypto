@@ -80,13 +80,34 @@ export function getCoinInfo(contractAddress) {
         // with Object.values
         const coinInfo = json && json.data && Object.values(json.data)[0];
 
-        updateCoinInfo({coinInfo});
-        resolve(coinInfo);
+        getQuote({id: coinInfo.id}).then(quote => {
+          const quoteObj = quote && quote.quote;
+          updateCoinInfo({coinInfo});
+          resolve({...coinInfo, quote: {...quoteObj}});
+        });
       })
       .catch(error => {
         reject(error);
       });
   });
+}
+
+export async function getQuote({id}) {
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const quotes = database.collection('quotes');
+
+    try {
+      const quote = await quotes.findOne({id});
+      return quote;
+    } catch (e) {
+      return JSON.stringify({error: e});
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export async function updateCoinInfo({coinInfo}) {
