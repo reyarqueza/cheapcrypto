@@ -15,6 +15,8 @@ import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router-dom/server';
 
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {ThemeProvider, createTheme} from '@mui/material/styles';
+import {CssBaseline} from '@mui/material';
 
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
@@ -33,7 +35,7 @@ import Coin from './jsx/Coin.jsx';
 import wrapper from './wrapper';
 import {getCoinInfo, getCoinList, signIn, updateUserCollection, getUserCollection} from './data';
 
-import {UserContext} from './context';
+import {UserContext, ThemeContext} from './context';
 import {hostInside} from './host';
 
 const app = express();
@@ -61,27 +63,38 @@ apicache.clear();
 // React SSR
 function App(props) {
   const {store} = props;
+  const [theme, setTheme] = useState(
+    createTheme({
+      palette: {
+        mode: 'light',
+      },
+    })
+  );
   const [user, setUser] = useState({});
-  const value = {user, setUser};
   const queryClient = new QueryClient();
 
   return (
-    <UserContext.Provider value={value}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <StaticRouter>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Coins />} />
-                <Route path="token-address" element={<Coin />}>
-                  <Route path=":coinId" element={<Coin />} />
-                </Route>
-              </Route>
-            </Routes>
-          </StaticRouter>
-        </QueryClientProvider>
-      </Provider>
-    </UserContext.Provider>
+    <ThemeContext.Provider value={{theme, setTheme}}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <UserContext.Provider value={{user, setUser}}>
+          <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+              <StaticRouter>
+                <Routes>
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Coins />} />
+                    <Route path="token-address" element={<Coin />}>
+                      <Route path=":coinId" element={<Coin />} />
+                    </Route>
+                  </Route>
+                </Routes>
+              </StaticRouter>
+            </QueryClientProvider>
+          </Provider>
+        </UserContext.Provider>
+      </ThemeProvider>
+    </ThemeContext.Provider>
   );
 }
 

@@ -41,10 +41,38 @@ import {
   Container,
   useMediaQuery,
 } from '@mui/material';
+import {tableCellClasses} from '@mui/material/TableCell';
+import {styled} from '@mui/material/styles';
+
+function alternatingRows(Row) {
+  return styled(Row)(({theme}) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+}
 
 export default function Coin() {
   const params = useParams();
   const isDesktop = useMediaQuery('(min-width:620px)');
+  //const tableCellClasses = TableCell.tableCellClasses;
+  const StyledTableCell = styled(TableCell)(({theme}) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  const StyledTableRow = alternatingRows(TableRow);
+  const StyledListItem = alternatingRows(ListItem);
+
   let status, isLoading, error, data;
 
   // avoid SSR, sorry no isomorphic here.
@@ -228,16 +256,9 @@ export default function Coin() {
               if (link.urls.length === 0) {
                 return null;
               }
-              backgroundColor =
-                backgroundColor === 'rgba(0, 0, 0, 0.04)' ? '#fff' : 'rgba(0, 0, 0, 0.04)';
-              console.log('backgroundColor', backgroundColor);
+
               return (
-                <ListItem
-                  key={index}
-                  sx={{
-                    backgroundColor,
-                  }}
-                >
+                <StyledListItem key={index}>
                   <ListItemIcon sx={{minWidth: '36px'}}>{link.icon(link.name)}</ListItemIcon>
                   <ListItemText primary={link && link.name && link.name.replaceAll('_', ' ')} />
                   {link.urls.map(url => (
@@ -247,12 +268,12 @@ export default function Coin() {
                       target="_blank"
                       variant="outlined"
                       size="small"
-                      sx={{backgroundColor: '#fff', margin: '0 10px 0 20px'}}
+                      sx={{margin: '0 10px 0 20px'}}
                     >
                       Open
                     </Button>
                   ))}
-                </ListItem>
+                </StyledListItem>
               );
             })}
           </List>
@@ -266,14 +287,14 @@ export default function Coin() {
               <TableBody>
                 {miscData.map((item, index) => {
                   return (
-                    <TableRow key={index}>
-                      <TableCell align="left">
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="left">
                         <strong style={{textTransform: 'capitalize'}}>
                           {Object.keys(item)[0].replaceAll('_', ' ')}
                         </strong>
-                      </TableCell>
-                      <TableCell align="center">{item[Object.keys(item)[0]]}</TableCell>
-                    </TableRow>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{item[Object.keys(item)[0]]}</StyledTableCell>
+                    </StyledTableRow>
                   );
                 })}
               </TableBody>
@@ -291,14 +312,14 @@ export default function Coin() {
             <TableBody>
               {quoteData.map((item, index) => {
                 return (
-                  <TableRow key={index}>
-                    <TableCell align="left">
+                  <StyledTableRow key={index}>
+                    <StyledTableCell align="left">
                       <strong style={{textTransform: 'capitalize'}}>
                         {Object.keys(item)[0].replaceAll('_', ' ')}
                       </strong>
-                    </TableCell>
-                    <TableCell align="center">{item[Object.keys(item)[0]]}</TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{item[Object.keys(item)[0]]}</StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
             </TableBody>

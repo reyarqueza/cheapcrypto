@@ -2,7 +2,7 @@ export default function (content, preloadedState) {
   return `<!doctype html>
 <html lang="en">
   <head>
-    <title>CheapCrypto.app - Cheap Cryptocurrency</title>
+    <title>cheapcrypto - Cheap Cryptocurrency</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Browse cheap cryptocurrency and add them to your watchlist." />
     <meta name="keywords" content="cheap cryptocurrency" />

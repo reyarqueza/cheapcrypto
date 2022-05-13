@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {GoogleLogin, GoogleLogout} from 'react-google-login';
-import {UserContext} from '../context';
+import {UserContext, ThemeContext} from '../context';
 
 import {Avatar, Chip} from '@mui/material';
 import {deepOrange} from '@mui/material/colors';
@@ -8,6 +8,7 @@ import {deepOrange} from '@mui/material/colors';
 export default function SignIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const {user, setUser} = useContext(UserContext);
+  const {theme} = useContext(ThemeContext);
   const handleSuccess = response => {
     const {email, givenName, googleId, familyName, imageUrl} = response && response.profileObj;
     const params = new URLSearchParams({
@@ -64,7 +65,7 @@ export default function SignIn() {
       onSuccess={handleSuccess}
       onFailure={handleFailure}
       cookiePolicy={'single_host_origin'}
-      theme="dark"
+      theme={theme && theme.palette && theme.palette.mode}
       isSignedIn={true}
     />
   );
