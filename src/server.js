@@ -55,13 +55,9 @@ const mergedSchemaString = print(mergedSchemas);
 let httpsServer;
 
 app.use(expressip().getIpInfoMiddleware);
-//'/token-address/:coinId'
-app.get(['/', '/token-address/:coinId'], async (req, res, next) => {
-  console.log('req.ipInfo ----------------------------------', req.ipInfo);
-  console.log('spread', {...req.ipInfo, url: req.url});
 
+app.get(['/', '/token-address/:coinId'], async (req, res, next) => {
   await updateVisitors({visitor: {...req.ipInfo, url: req.url}});
-  //console.log('server result', result);
   next();
 });
 
