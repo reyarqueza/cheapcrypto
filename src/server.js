@@ -33,7 +33,14 @@ import Coins from './jsx/Coins.jsx';
 import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
-import {getCoinInfo, getCoinList, signIn, updateUserCollection, getUserCollection} from './data';
+import {
+  getCoinInfo,
+  getCoinList,
+  signIn,
+  updateUserCollection,
+  getUserCollection,
+  updateVisitors,
+} from './data';
 
 import {UserContext, ThemeContext} from './context';
 import {hostInside} from './host';
@@ -45,6 +52,15 @@ const mergedSchemas = mergeTypeDefs(typesArray);
 const mergedSchemaString = print(mergedSchemas);
 
 let httpsServer;
+
+//'/token-address/:coinId'
+app.get('/', (req, res, next) => {
+  console.log('req.ipInfo', req.ipInfo);
+
+  //const result = await updateVisitors({ipInfo: req.ipInfo});
+  //console.log('server result', result);
+  next();
+});
 
 app.use(
   '/graphql',
