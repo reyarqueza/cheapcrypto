@@ -128,6 +128,24 @@ export async function updateCoinInfo({coinInfo}) {
   }
 }
 
+export async function updateVisitors({visitor}) {
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const visitors = database.collection('visitors');
+
+    try {
+      const result = await visitors.insertOne({...visitor, timestamp: Date.now()});
+      return JSON.stringify(result);
+    } catch (e) {
+      return JSON.stringify({error: e});
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function signIn({firstName, lastName, picture, id, email}) {
   const saltRounds = 10;
 

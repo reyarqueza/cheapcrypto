@@ -1,4 +1,5 @@
 import express from 'express';
+import expressip from 'express-ip';
 import https from 'https';
 import fs from 'fs';
 import compression from 'compression';
@@ -33,7 +34,14 @@ import Coins from './jsx/Coins.jsx';
 import Coin from './jsx/Coin.jsx';
 
 import wrapper from './wrapper';
-import {getCoinInfo, getCoinList, signIn, updateUserCollection, getUserCollection} from './data';
+import {
+  getCoinInfo,
+  getCoinList,
+  signIn,
+  updateUserCollection,
+  getUserCollection,
+  updateVisitors,
+} from './data';
 
 import {UserContext, ThemeContext} from './context';
 import {hostInside} from './host';
@@ -45,6 +53,13 @@ const mergedSchemas = mergeTypeDefs(typesArray);
 const mergedSchemaString = print(mergedSchemas);
 
 let httpsServer;
+
+app.use(expressip().getIpInfoMiddleware);
+
+app.get(['/', '/token-address/:coinId'], async (req, res, next) => {
+  await updateVisitors({visitor: {...req.ipInfo, url: req.url}});
+  next();
+});
 
 app.use(
   '/graphql',
