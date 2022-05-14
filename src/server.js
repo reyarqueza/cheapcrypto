@@ -1,4 +1,5 @@
 import express from 'express';
+import expressip from 'express-ip';
 import https from 'https';
 import fs from 'fs';
 import compression from 'compression';
@@ -53,11 +54,13 @@ const mergedSchemaString = print(mergedSchemas);
 
 let httpsServer;
 
+app.use(expressip().getIpInfoMiddleware);
 //'/token-address/:coinId'
-app.get('/', (req, res, next) => {
-  console.log('req.ipInfo', req.ipInfo);
+app.get(['/', '/token-address/:coinId'], async (req, res, next) => {
+  console.log('req.ipInfo ----------------------------------', req.ipInfo);
+  console.log('spread', {...req.ipInfo, url: req.url});
 
-  //const result = await updateVisitors({ipInfo: req.ipInfo});
+  await updateVisitors({visitor: {...req.ipInfo, url: req.url}});
   //console.log('server result', result);
   next();
 });

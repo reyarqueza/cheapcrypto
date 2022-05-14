@@ -128,17 +128,15 @@ export async function updateCoinInfo({coinInfo}) {
   }
 }
 
-export async function updateVisitors({ipInfo}) {
+export async function updateVisitors({visitor}) {
   try {
     await client.connect();
 
     const database = client.db('cheapcrypto');
     const visitors = database.collection('visitors');
-    //console.log('visitors', visitors);
+
     try {
-      //console.log('ipInfo', ipInfo);
-      const result = await visitors.insertOne(ipInfo);
-      //console.log('result', result);
+      const result = await visitors.insertOne({...visitor, timestamp: Date.now()});
       return JSON.stringify(result);
     } catch (e) {
       return JSON.stringify({error: e});
