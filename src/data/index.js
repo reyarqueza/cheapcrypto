@@ -129,6 +129,11 @@ export async function updateCoinInfo({coinInfo}) {
 }
 
 export async function updateVisitors({visitor}) {
+  // don't record visitors from localhost / dev
+  if (visitor.ip === '::1') {
+    return;
+  }
+
   try {
     await client.connect();
 
