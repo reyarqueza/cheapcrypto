@@ -137,16 +137,10 @@ function getVisitorUpdated(visitor) {
   // express-ip does not support it. express-ip provides an error, but we need data to dev with.
   if (visitor.ip === '::1' || visitor.ip === '127.0.0.1') {
     visitorUpdated = {
-      ip: '::ffff:73.70.117.171',
-      range: [1229353984, 1229355007],
       country: 'US',
       region: 'CA',
-      eu: '0',
       timezone: 'America/Los_Angeles',
-      city: 'Vallejo',
-      ll: [38.1025, -122.2132],
-      metro: 807,
-      area: 5,
+      city: 'San Francisco',
       url: '/',
     };
   } else {
