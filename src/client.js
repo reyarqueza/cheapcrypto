@@ -13,6 +13,7 @@ import Coins from './jsx/Coins.jsx';
 import {UserContext, ThemeContext} from './context';
 
 const Coin = lazy(() => import('./jsx/Coin.jsx'));
+const Visitors = lazy(() => import('./jsx/Visitors.jsx'));
 
 // Grab the state from a global variable injected into the server-generated HTML
 const preloadedState = window.__PRELOADED_STATE__;
@@ -61,6 +62,14 @@ function App(props) {
                         }
                       />
                     </Route>
+                    <Route
+                      path="visitors"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <Visitors />
+                        </Suspense>
+                      }
+                    />
                   </Route>
                 </Routes>
               </BrowserRouter>

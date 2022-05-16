@@ -2,6 +2,8 @@ import fetch from 'cross-fetch';
 import {config} from './config';
 import {MongoClient} from 'mongodb';
 import bcrypt from 'bcrypt';
+import * as ChartGeo from 'chartjs-chart-geo';
+import {hostInside} from '../host';
 
 const client = new MongoClient(process.env.MONGODB_URI_CHEAPCRYPTO);
 
@@ -128,27 +130,130 @@ export async function updateCoinInfo({coinInfo}) {
   }
 }
 
-export async function updateVisitors({visitor}) {
-  // don't record visitors from localhost / dev
-  if (visitor.ip === '::1') {
-    return;
+function getVisitorUpdated(visitor) {
+  let visitorUpdated;
+
+  // don't record visitors from localhost / dev, insert rigged visitor for testing since
+  // express-ip does not support it. express-ip provides an error, but we need data to dev with.
+  if (visitor.ip === '::1' || visitor.ip === '127.0.0.1') {
+    visitorUpdated = {
+      ip: '::ffff:73.70.117.171',
+      range: [1229353984, 1229355007],
+      country: 'US',
+      region: 'CA',
+      eu: '0',
+      timezone: 'America/Los_Angeles',
+      city: 'Vallejo',
+      ll: [38.1025, -122.2132],
+      metro: 807,
+      area: 5,
+      url: '/',
+    };
+  } else {
+    visitorUpdated = visitor;
   }
+
+  return visitorUpdated;
+}
+
+export async function updateVisitors({visitor}) {
+  const visitorUpdated = getVisitorUpdated(visitor);
 
   try {
     await client.connect();
 
     const database = client.db('cheapcrypto');
     const visitors = database.collection('visitors');
+    const visits = database.collection('visits');
 
     try {
-      const result = await visitors.insertOne({...visitor, timestamp: Date.now()});
-      return JSON.stringify(result);
+      await visitors.insertOne({...visitorUpdated, timestamp: Date.now()});
     } catch (e) {
       return JSON.stringify({error: e});
+    }
+
+    for (const [key, value] of Object.entries(visitorUpdated)) {
+      if (
+        !(
+          key === 'country' ||
+          key === 'region' ||
+          key === 'timezone' ||
+          key === 'city' ||
+          key === 'url'
+        )
+      ) {
+        continue;
+      }
+
+      try {
+        const query = `${key}.${value}`;
+        await visits.findOneAndUpdate({}, {$inc: {[query]: 1}}, {upsert: true});
+      } catch (e) {
+        return JSON.stringify({error: e});
+      }
+    }
+
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function getVisitCounts() {
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const visits = database.collection('visits');
+
+    try {
+      const visitInfo = await visits.findOne({}, {projection: {_id: 0}});
+
+      return {...visitInfo};
+    } catch (e) {
+      return {error: e};
     }
   } catch (e) {
     console.log(e);
   }
+}
+
+export async function getCountriesByVisitors() {
+  const countriesResponse = await fetch(`${hostInside()}/json/countries-50m.json`);
+  const topology = await countriesResponse.json();
+  const countries = ChartGeo.topojson.feature(topology, topology.objects.countries).features;
+
+  const visitCountsResponse = await fetch(`${hostInside()}/get-visit-counts`);
+  const visitCounts = await visitCountsResponse.json();
+
+  const ISO_3166_1Response = await fetch(`${hostInside()}/json/ISO-3166-1.min.json`);
+  const ISO_3166_1 = await ISO_3166_1Response.json();
+
+  const countriesWithVisits = countries.map(d => {
+    if (!d.id) {
+      return {
+        feature: d,
+        value: 0,
+      };
+    }
+
+    const countryNumericCode = Number(d.id);
+    const countryCodeObj = ISO_3166_1.find(countryCode => {
+      if (countryCode.numeric_code === countryNumericCode) {
+        return countryCode;
+      }
+    });
+    const countryAlpha2Code = countryCodeObj.alpha_2_code;
+    const visits = visitCounts.country[countryAlpha2Code];
+    const value = visits ? visits : 0;
+
+    return {
+      feature: d,
+      value,
+    };
+  });
+
+  return countriesWithVisits;
 }
 
 export function signIn({firstName, lastName, picture, id, email}) {

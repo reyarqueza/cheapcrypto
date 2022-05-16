@@ -41,6 +41,8 @@ import {
   updateUserCollection,
   getUserCollection,
   updateVisitors,
+  getVisitCounts,
+  getCountriesByVisitors,
 } from './data';
 
 import {UserContext, ThemeContext} from './context';
@@ -56,7 +58,7 @@ let httpsServer;
 
 app.use(expressip().getIpInfoMiddleware);
 
-app.get(['/', '/token-address/:coinId'], async (req, res, next) => {
+app.get(['/', '/token-address/:coinId', '/visitors'], async (req, res, next) => {
   await updateVisitors({visitor: {...req.ipInfo, url: req.url}});
   next();
 });
@@ -141,7 +143,7 @@ app.use(compression());
 app.use(express.static('public'));
 
 // SSR
-app.get(['/', '/token-address/:coinId'], cache('5 minutes'), init);
+app.get(['/', '/token-address/:coinId', '/visitors'], cache('5 minutes'), init);
 
 // rest api
 app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
@@ -158,6 +160,16 @@ app.get('/get-coin-meta', cache('5 minutes'), (req, res) => {
   getCoinInfo(contractAddress).then(coinInfo => {
     res.send(coinInfo);
   });
+});
+
+app.get('/get-visit-counts', cache('5 minutes'), async (req, res) => {
+  const json = await getVisitCounts();
+
+  res.json(json);
+});
+
+app.get('/get-countries-by-visitors', cache('5 minutes'), async (req, res) => {
+  res.json(await getCountriesByVisitors());
 });
 
 app.post('/signin', (req, res) => {
