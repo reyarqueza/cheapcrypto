@@ -59,7 +59,10 @@ let httpsServer;
 app.use(expressip().getIpInfoMiddleware);
 
 app.get(['/', '/token-address/:coinId', '/visitors'], async (req, res, next) => {
-  await updateVisitors({visitor: {...req.ipInfo, url: req.url}});
+  await updateVisitors({
+    visitor: {...req.ipInfo, url: req.url},
+    syncVisitors: req.query.syncVisitors,
+  });
   next();
 });
 

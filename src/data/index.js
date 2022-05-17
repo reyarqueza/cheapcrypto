@@ -151,11 +151,78 @@ function getVisitorUpdated(visitor) {
   return visitorUpdated;
 }
 
-export async function updateVisitors({visitor}) {
-  const visitorUpdated = getVisitorUpdated(visitor);
-  const visitorIp = visitorUpdated.ip.replace('::ffff:', '');
+function processIp(ip) {
+  return ip && ip.replace('::ffff:', '');
+}
+
+async function runSyncVisitors() {
+  console.log('running....');
   const ipExclusionsArray = JSON.parse(process.env.IP_EXCLUSIONS);
 
+  try {
+    await client.connect();
+
+    const database = client.db('cheapcrypto');
+    const visitors = database.collection('visitors');
+    const visits = database.collection('visits');
+
+    try {
+      const cursor = await visitors.find({});
+
+      // empty the visits collection
+      await visits.deleteMany({});
+
+      cursor.forEach(visitor => {
+        const visitorIp = processIp(visitor.ip);
+        if (visitorIp && ipExclusionsArray.includes(visitorIp)) {
+          return;
+        }
+        updateVisits(visitor, visits);
+      });
+    } catch (e) {
+      return JSON.stringify({error: e});
+    }
+
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function updateVisits(visitor, visits) {
+  for (const [key, value] of Object.entries(visitor)) {
+    if (
+      !(
+        key === 'country' ||
+        key === 'region' ||
+        key === 'timezone' ||
+        key === 'city' ||
+        key === 'url'
+      )
+    ) {
+      continue;
+    }
+
+    try {
+      const query = `${key}.${value}`;
+      await visits.findOneAndUpdate({}, {$inc: {[query]: 1}}, {upsert: true});
+    } catch (e) {
+      return JSON.stringify({error: e});
+    }
+  }
+}
+
+export async function updateVisitors({visitor, syncVisitors}) {
+  const visitorUpdated = getVisitorUpdated(visitor);
+  const visitorIp = processIp(visitorUpdated.ip);
+  const ipExclusionsArray = JSON.parse(process.env.IP_EXCLUSIONS);
+
+  if (syncVisitors) {
+    await runSyncVisitors();
+    return; // don't run the rest below.
+  }
+
+  // don't count if IP is in IP_EXCLUSIONS
   if (ipExclusionsArray.includes(visitorIp)) {
     return;
   }
@@ -173,28 +240,7 @@ export async function updateVisitors({visitor}) {
       return JSON.stringify({error: e});
     }
 
-    for (const [key, value] of Object.entries(visitorUpdated)) {
-      if (
-        !(
-          key === 'country' ||
-          key === 'region' ||
-          key === 'timezone' ||
-          key === 'city' ||
-          key === 'url'
-        )
-      ) {
-        continue;
-      }
-
-      try {
-        const query = `${key}.${value}`;
-        await visits.findOneAndUpdate({}, {$inc: {[query]: 1}}, {upsert: true});
-      } catch (e) {
-        return JSON.stringify({error: e});
-      }
-    }
-
-    return;
+    await updateVisits(visitorUpdated, visits);
   } catch (e) {
     console.log(e);
   }
