@@ -137,6 +137,7 @@ function getVisitorUpdated(visitor) {
   // express-ip does not support it. express-ip provides an error, but we need data to dev with.
   if (visitor.ip === '::1' || visitor.ip === '127.0.0.1') {
     visitorUpdated = {
+      ip: '::ffff:999.999.999.999',
       country: 'US',
       region: 'CA',
       timezone: 'America/Los_Angeles',
@@ -152,6 +153,12 @@ function getVisitorUpdated(visitor) {
 
 export async function updateVisitors({visitor}) {
   const visitorUpdated = getVisitorUpdated(visitor);
+  const visitorIp = visitorUpdated.ip.replace('::ffff:', '');
+  const ipExclusionsArray = JSON.parse(process.env.IP_EXCLUSIONS);
+
+  if (ipExclusionsArray.includes(visitorIp)) {
+    return;
+  }
 
   try {
     await client.connect();
