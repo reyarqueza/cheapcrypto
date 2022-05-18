@@ -215,7 +215,7 @@ async function updateVisits(visitor, visits) {
 export async function updateVisitors({visitor, syncVisitors}) {
   const visitorUpdated = getVisitorUpdated(visitor);
   const visitorIp = processIp(visitorUpdated.ip);
-  const ipExclusionsArray = JSON.parse(process.env.IP_EXCLUSIONS);
+  const ipExclusionsArray = ['73.70.117.171', '172.58.88.6'];
 
   if (syncVisitors) {
     await runSyncVisitors();
