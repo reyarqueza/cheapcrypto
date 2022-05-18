@@ -58,9 +58,15 @@ let httpsServer;
 
 app.use(expressip().getIpInfoMiddleware);
 
-app.get(['/', '/token-address/:coinId', '/visitors'], async (req, res, next) => {
+app.get(['/', '/token-address/:coinId', '/visitors', '/get-coin-meta'], async (req, res, next) => {
+  // transform spa api url to equivalent friendly seo url for tracking.
+  const url =
+    req.url.indexOf('get-coin-meta') > -1
+      ? req.url.replace('/get-coin-meta?contractAddress=', '/token-address/')
+      : req.url;
+
   await updateVisitors({
-    visitor: {...req.ipInfo, url: req.url},
+    visitor: {...req.ipInfo, url},
     syncVisitors: req.query.syncVisitors,
   });
   next();
