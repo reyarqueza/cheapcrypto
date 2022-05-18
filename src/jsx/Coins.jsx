@@ -78,10 +78,10 @@ class Coins extends PureComponent {
       listings &&
       listings.map(prop => ({
         id: prop.id,
-        tokenAddress: prop.platform.token_address,
+        tokenAddress: prop && prop.platform && prop.platform.token_address,
         name: prop.name,
         symbol: prop.symbol,
-        platform: prop.platform.symbol,
+        platform: prop && prop.platform && prop.platform.symbol,
         numMarketPairs: prop.num_market_pairs,
         dateAdded: (
           <MyTooltip label={formatDate(prop.date_added)} title={formatTime(prop.date_added)} />
