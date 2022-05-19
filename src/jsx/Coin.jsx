@@ -1,5 +1,5 @@
 import React from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {print} from 'graphql';
 import {request, gql} from 'graphql-request';
@@ -82,7 +82,7 @@ export default function Coin() {
     const query = gql`
       ${print(require('../graphql/coinMeta.graphql'))}
     `;
-    const variables = {contractAddress: coinId};
+    const variables = {id: coinId};
 
     ({status, isLoading, error, data} = useQuery(['coinMeta', coinId], () =>
       request(endpoint, query, variables).then(data => data && data.coinMeta)
@@ -210,6 +210,25 @@ export default function Coin() {
     },
   }));
 
+  const platformData = Object.entries(platform).map(([key, value]) => {
+    if (key === 'token_address') {
+      switch (platform.symbol) {
+        case 'BNB':
+          return {
+            [key]: `https://bscscan.com/token/${value}`,
+          };
+        case 'ETH':
+          return {
+            [key]: `https://etherscan.io/token/${value}`,
+          };
+        default:
+          return {[key]: value};
+      }
+    } else {
+      return {[key]: value};
+    }
+  });
+
   let backgroundColor = '#fff';
 
   return (
@@ -246,9 +265,9 @@ export default function Coin() {
         {description}
       </Typography>
 
-      <Stack direction={isDesktop ? 'row' : 'column'} sx={{padding: '0 20px 20px 0'}}>
-        <Container>
-          <Typography variant="h6" m={2} gutterBottom component="h2">
+      <Stack direction={isDesktop ? 'row' : 'column'}>
+        <Container sx={{paddingBottom: '40px'}}>
+          <Typography variant="h6" gutterBottom component="h2">
             External Links
           </Typography>
           <List>
@@ -278,11 +297,11 @@ export default function Coin() {
             })}
           </List>
         </Container>
-        <Container>
-          <Typography variant="h6" m={2} gutterBottom component="h2">
+        <Container sx={{paddingBottom: '40px'}}>
+          <Typography variant="h6" gutterBottom component="h2">
             Misc Information
           </Typography>
-          <TableContainer sx={{margin: '0 20px 20px 20px'}}>
+          <TableContainer>
             <Table>
               <TableBody>
                 {miscData.map((item, index) => {
@@ -303,29 +322,88 @@ export default function Coin() {
         </Container>
       </Stack>
 
-      <Container>
-        <Typography variant="h6" m={2} gutterBottom component="h2">
-          Quote Information
-        </Typography>
-        <TableContainer sx={{margin: '0 20px 20px 0'}}>
-          <Table>
-            <TableBody>
-              {quoteData.map((item, index) => {
-                return (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell align="left">
-                      <strong style={{textTransform: 'capitalize'}}>
-                        {Object.keys(item)[0].replaceAll('_', ' ')}
-                      </strong>
-                    </StyledTableCell>
-                    <StyledTableCell align="center">{item[Object.keys(item)[0]]}</StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+      <Stack direction={isDesktop ? 'row' : 'column'}>
+        <Container sx={{paddingBottom: '40px'}}>
+          <Typography variant="h6" gutterBottom component="h2">
+            Quote Information
+          </Typography>
+          <TableContainer>
+            <Table>
+              <TableBody>
+                {quoteData.map((item, index) => {
+                  return (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="left">
+                        <strong style={{textTransform: 'capitalize'}}>
+                          {Object.keys(item)[0].replaceAll('_', ' ')}
+                        </strong>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{item[Object.keys(item)[0]]}</StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+        <Container sx={{paddingBottom: '40px'}}>
+          <Typography variant="h6" gutterBottom component="h2">
+            Platform Information
+          </Typography>
+          <TableContainer>
+            <Table>
+              <TableBody>
+                {platformData.map((item, index) => {
+                  const key = Object.keys(item)[0];
+                  const value = item[key];
+                  let platformLabel = '';
+
+                  if (key === 'token_address') {
+                    switch (platform.symbol) {
+                      case 'BNB':
+                        platformLabel = 'BscScan';
+                        break;
+                      case 'ETH':
+                        platformLabel = 'Etherscan';
+                        break;
+                      default:
+                        platformLabel = key.replaceAll('_', ' ');
+                    }
+                  } else {
+                    platformLabel = key.replaceAll('_', ' ');
+                  }
+
+                  return (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="left">
+                        <strong style={{textTransform: 'capitalize'}}>
+                          {key === 'token_address'
+                            ? 'Blockchain Explorer'
+                            : key.replaceAll('_', ' ')}
+                        </strong>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {key === 'token_address' ? (
+                          <Button
+                            sx={{textTransform: 'none'}}
+                            variant="contained"
+                            target="_blank"
+                            href={value}
+                          >
+                            {platformLabel}
+                          </Button>
+                        ) : (
+                          value
+                        )}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+      </Stack>
     </div>
   );
 }

@@ -64,10 +64,10 @@ export async function updateQuotes({quotes}) {
   }
 }
 
-export function getCoinInfo(contractAddress) {
+export function getCoinInfo(id) {
   const url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/info';
   const params = new URLSearchParams({
-    address: contractAddress,
+    id, //address: contractAddress,
   });
   const urlString = `${url}?${params.toString()}`;
   console.log(urlString);

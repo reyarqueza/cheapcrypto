@@ -58,11 +58,11 @@ let httpsServer;
 
 app.use(expressip().getIpInfoMiddleware);
 
-app.get(['/', '/token-address/:coinId', '/visitors', '/get-coin-meta'], async (req, res, next) => {
+app.get(['/', '/token-id/:coinId', '/visitors', '/get-coin-meta'], async (req, res, next) => {
   // transform spa api url to equivalent friendly seo url for tracking.
   const url =
     req.url.indexOf('get-coin-meta') > -1
-      ? req.url.replace('/get-coin-meta?contractAddress=', '/token-address/')
+      ? req.url.replace('/get-coin-meta?id=', '/token-id/')
       : req.url;
 
   await updateVisitors({
@@ -78,7 +78,7 @@ app.use(
     schema: buildSchema(mergedSchemaString),
     rootValue: {
       coinList: ({minQuote, maxQuote, start}) => fetchCoinList({minQuote, maxQuote, start}),
-      coinMeta: ({contractAddress}) => fetchCoinMeta({contractAddress}),
+      coinMeta: ({id}) => fetchCoinMeta({id}),
     },
     graphiql: true,
   })
@@ -110,7 +110,7 @@ function App(props) {
                 <Routes>
                   <Route path="/" element={<Layout />}>
                     <Route index element={<Coins />} />
-                    <Route path="token-address" element={<Coin />}>
+                    <Route path="token-id" element={<Coin />}>
                       <Route path=":coinId" element={<Coin />} />
                     </Route>
                   </Route>
@@ -152,7 +152,7 @@ app.use(compression());
 app.use(express.static('public'));
 
 // SSR
-app.get(['/', '/token-address/:coinId', '/visitors'], cache('5 minutes'), init);
+app.get(['/', '/token-id/:coinId', '/visitors'], cache('5 minutes'), init);
 
 // rest api
 app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
@@ -164,9 +164,9 @@ app.get('/get-coin-list', cache('5 minutes'), (req, res) => {
 });
 
 app.get('/get-coin-meta', cache('5 minutes'), (req, res) => {
-  const {contractAddress} = req.query;
+  const {id} = req.query;
 
-  getCoinInfo(contractAddress).then(coinInfo => {
+  getCoinInfo(id).then(coinInfo => {
     res.send(coinInfo);
   });
 });

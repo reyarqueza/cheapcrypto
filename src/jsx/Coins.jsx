@@ -59,7 +59,7 @@ class Coins extends PureComponent {
       },
       {id: 2, field: 'symbol', headerName: 'Symbol'},
       {id: 3, field: 'quote', headerName: 'Quote'},
-      {id: 4, field: 'platform', headerName: 'Platform'},
+      //{id: 4, field: 'platform', headerName: 'Platform'},
       {id: 5, field: 'maxSupply', headerName: 'Max Supply'},
       {
         id: 6,
@@ -78,10 +78,10 @@ class Coins extends PureComponent {
       listings &&
       listings.map(prop => ({
         id: prop.id,
-        tokenAddress: prop && prop.platform && prop.platform.token_address,
+        //tokenAddress: prop && prop.platform && prop.platform.token_address,
         name: prop.name,
         symbol: prop.symbol,
-        platform: prop && prop.platform && prop.platform.symbol,
+        //platform: prop && prop.platform && prop.platform.symbol,
         numMarketPairs: prop.num_market_pairs,
         dateAdded: (
           <MyTooltip label={formatDate(prop.date_added)} title={formatTime(prop.date_added)} />
@@ -164,14 +164,15 @@ class Coins extends PureComponent {
                         align="center"
                         variant="contained"
                         component={Link}
-                        to={`/token-address/${row.tokenAddress}`}
+                        //to={`/token-address/${row.tokenAddress}`}
+                        to={`/token-id/${row.id}`}
                       >
                         {row.name}
                       </Button>
                     </StyledTableCell>
                     <StyledTableCell align="right">{row.symbol}</StyledTableCell>
                     <StyledTableCell align="right">{row.quote}</StyledTableCell>
-                    <StyledTableCell align="center">{row.platform}</StyledTableCell>
+                    {/* <StyledTableCell align="center">{row.platform}</StyledTableCell> */}
                     <StyledTableCell align="center">{row.maxSupply}</StyledTableCell>
                     <StyledTableCell align="center">
                       {row.selfReportedCirculatingSupply}

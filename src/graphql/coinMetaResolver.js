@@ -1,8 +1,8 @@
 import fetch from 'cross-fetch';
 import {hostInside} from '../host';
 
-export async function fetchCoinMeta({contractAddress}) {
-  const params = new URLSearchParams({contractAddress});
+export async function fetchCoinMeta({id}) {
+  const params = new URLSearchParams({id});
   const url = `${hostInside()}/get-coin-meta?${params.toString()}`;
 
   try {

@@ -59,7 +59,7 @@ export default function CoinWatchList(props) {
                     color="info"
                     key={item.id}
                     component={Link}
-                    to={`/token-address/${item.platform.token_address}`}
+                    to={`/token-id/${item.id}`}
                     clickable
                     avatar={<Avatar alt={item.name} src={item.logo} />}
                     label={item.name}

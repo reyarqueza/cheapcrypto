@@ -5,8 +5,8 @@ Use the GraphiQL app on http://localhost:3000/graphql
 ## In the GraphiQL app, test with:
 
 ```
-query CoinMeta($contractAddress: String!) {
-  coinMeta(contractAddress: $contractAddress) {
+query CoinMeta($id: String!) {
+  coinMeta(id: $id) {
     id
     name
     symbol
@@ -60,5 +60,5 @@ query CoinMeta($contractAddress: String!) {
 ## when using the GraphiQL app's QUERY VARIABLES textarea box, the map needs to be specified in JSON.
 
 ```
-{ "contractAddress": "0x5fdfe5ee55ae0fb7e0dba3481ea46f22fc92cbbb"}
+{ "id": "15844"}
 ```

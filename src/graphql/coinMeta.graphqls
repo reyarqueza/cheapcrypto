@@ -1,5 +1,5 @@
 type Query {
-  coinMeta(contractAddress: String!): CoinInfo
+  coinMeta(id: String!): CoinInfo
 }
 
 type CoinInfo {

@@ -1,5 +1,5 @@
-query CoinMeta($contractAddress: String!) {
-  coinMeta(contractAddress: $contractAddress) {
+query CoinMeta($id: String!) {
+  coinMeta(id: $id) {
     id
     name
     symbol

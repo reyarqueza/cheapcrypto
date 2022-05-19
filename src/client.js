@@ -46,7 +46,7 @@ function App(props) {
                   <Route path="/" element={<Layout />}>
                     <Route index element={<Coins />} />
                     <Route
-                      path="token-address"
+                      path="token-id"
                       element={
                         <Suspense fallback={<>...</>}>
                           <Coin />

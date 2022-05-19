@@ -8,7 +8,7 @@ http://localhost:3000/get-coin-list?minQuote=1e-23&maxQuote=1e-13
 
 ### coin info by contract address
 
-http://localhost:3000/get-coin-meta-2?contractAddress=0x4a7cdafb3c1b63029b0a11e91d0a718bf635daab
+http://localhost:3000/get-coin-meta?id=17235
 
 ## Install and start it up!
 
