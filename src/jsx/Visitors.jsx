@@ -127,6 +127,9 @@ export default function Visitors() {
       <canvas style={{paddingBottom: '40px'}} id="canvas"></canvas>
       <Stack direction={isDesktop ? 'row' : 'column'}>
         {visits.map((visit, index) => {
+          if (Object.keys(visit)[0] === 'url') {
+            return null;
+          }
           return (
             <Container key={`stack-${index}`} sx={{paddingBottom: '40px'}}>
               <Typography variant="h6" gutterBottom component="h2">
