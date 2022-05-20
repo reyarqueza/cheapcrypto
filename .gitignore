@@ -10,7 +10,7 @@ npm-debug.log*
 node_modules/
 
 # files built by build system
-public/js/*
+# public/js/*
 
 # dotenv
 .env
